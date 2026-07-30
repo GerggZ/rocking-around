@@ -20,7 +20,7 @@ export function renderDashboardView(container, providerName) {
       <div class="track-grid">
         ${Object.keys(TRACK_DATABASE).map(songNum => {
           const formattedNum = String(songNum).padStart(2, '0');
-          return `<a href="/?song=${songNum}" class="track-link">Card #${formattedNum}</a>`;
+          return `<a href="?song=${songNum}" class="track-link">Card #${formattedNum}</a>`;
         }).join('')}
       </div>
     </div>
