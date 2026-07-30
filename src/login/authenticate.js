@@ -9,6 +9,9 @@ export async function login(provider = 'spotify') {
   }
 }
 
+// Automatically uses the current window location (localhost during dev, github.io in production)
+const REDIRECT_URI = window.location.origin + window.location.pathname;
+
 export async function checkAuth() {
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get('code');
