@@ -18,7 +18,7 @@
     <div class="external-section">
       <h3 class="section-title">Select Card</h3>
       <div class="track-grid">
-        ${Object.keys(C).map(e=>`<a href="/?song=${e}" class="track-link">Card #${String(e).padStart(2,`0`)}</a>`).join(``)}
+        ${Object.keys(C).map(e=>`<a href="?song=${e}" class="track-link">Card #${String(e).padStart(2,`0`)}</a>`).join(``)}
       </div>
     </div>
   `)}function D(e,t){e.innerHTML=`
