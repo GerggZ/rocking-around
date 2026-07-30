@@ -1,5 +1,5 @@
 const CLIENT_ID = "82eeae9401364e56b2ca10cbd0b291f8"; // <-- Ensure your Client ID is here
-const REDIRECT_URI = "http://127.0.0.1:5173/";
+const REDIRECT_URI = window.location.origin + window.location.pathname;
 
 let spotifyPlayer = null;
 let spotifyDeviceId = null;
