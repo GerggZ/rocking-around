@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:,">
+  <title>RockingAround Web Dashboard</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+
+  <!-- BLURRED MOUNTAIN BACKGROUND -->
+  <div class="mountain-bg"></div>
+
+  <!-- MAIN VIEWPORT -->
+  <div class="app-viewport">
+    
+    <!-- 🏔️ MOUNTAIN CARD FRAME -->
+    <div class="card-board">
+      <img src="/src/assets/climbing-card.png" class="frame-bg" alt="" aria-hidden="true" />
+      <div id="card-mount" class="card-content"></div>
+    </div>
+
+    <!-- 🎴 EXTERNAL CONTENT MOUNT (SELECT CARD GRID OR BACK BUTTON) -->
+    <div id="external-content"></div>
+
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

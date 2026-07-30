@@ -1,0 +1,21 @@
+{
+  "name": "rocking-around",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1",
+    "vite": "^8.2.0"
+  },
+  "dependencies": {
+    "@tidal-music/auth": "^1.6.1",
+    "@tidal-music/player": "^0.18.4"
+  }
+}

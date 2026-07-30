@@ -1,0 +1,126 @@
+const CLIENT_ID = "82eeae9401364e56b2ca10cbd0b291f8"; // <-- Ensure your Client ID is here
+const REDIRECT_URI = "http://127.0.0.1:5173/";
+
+let spotifyPlayer = null;
+let spotifyDeviceId = null;
+
+function generateRandomString(length) {
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+  const values = crypto.getRandomValues(new Uint8Array(length));
+  return values.reduce((acc, x) => acc + possible[x % possible.length], "");
+}
+
+async function generateCodeChallenge(verifier) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(verifier);
+  const digest = await window.crypto.subtle.digest('SHA-256', data);
+  return btoa(String.fromCharCode.apply(null, new Uint8Array(digest)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+export async function login() {
+  const codeVerifier = generateRandomString(64);
+  sessionStorage.setItem('spotify_code_verifier', codeVerifier);
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
+  
+  const scopes = "streaming user-read-email user-read-private user-modify-playback-state";
+  const authUrl = new URL("https://accounts.spotify.com/authorize");
+  authUrl.searchParams.append("response_type", "code");
+  authUrl.searchParams.append("client_id", CLIENT_ID);
+  authUrl.searchParams.append("scope", scopes);
+  authUrl.searchParams.append("redirect_uri", REDIRECT_URI);
+  authUrl.searchParams.append("code_challenge", codeChallenge);
+  authUrl.searchParams.append("code_challenge_method", "S256");
+
+  window.location.href = authUrl.toString();
+}
+
+export async function handleCallback(code) {
+  const verifier = sessionStorage.getItem('spotify_code_verifier');
+  window.history.replaceState({}, document.title, window.location.pathname);
+  
+  const response = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: CLIENT_ID,
+      grant_type: "authorization_code",
+      code: code,
+      redirect_uri: REDIRECT_URI,
+      code_verifier: verifier
+    })
+  });
+
+  const data = await response.json();
+  if (data.access_token) {
+    sessionStorage.setItem('spotify_access_token', data.access_token);
+    return data.access_token;
+  }
+  throw new Error("Failed to retrieve access token");
+}
+
+export function getToken() {
+  return sessionStorage.getItem('spotify_access_token');
+}
+
+function loadSDK() {
+  return new Promise((resolve, reject) => {
+    if (window.Spotify) return resolve();
+    window.onSpotifyWebPlaybackSDKReady = () => resolve();
+    const script = document.createElement('script');
+    script.src = 'https://sdk.scdn.co/spotify-player.js';
+    script.onerror = () => reject(new Error("Failed to load Spotify SDK"));
+    document.head.appendChild(script);
+  });
+}
+
+export async function initPlayer(onReady, onError, onStateChange) {
+  await loadSDK();
+  const token = getToken();
+
+  spotifyPlayer = new Spotify.Player({
+    name: 'RockingAround Game',
+    getOAuthToken: cb => cb(token),
+    volume: 0.8
+  });
+
+  spotifyPlayer.addListener('ready', ({ device_id }) => {
+    spotifyDeviceId = device_id;
+    onReady(device_id);
+  });
+
+  spotifyPlayer.addListener('player_state_changed', (state) => {
+    if (onStateChange) onStateChange(state);
+  });
+
+  spotifyPlayer.addListener('initialization_error', ({ message }) => onError(message));
+  spotifyPlayer.addListener('account_error', ({ message }) => onError("Requires Spotify Premium"));
+  
+  await spotifyPlayer.connect();
+}
+
+export async function playTrack(trackId) {
+  const token = getToken();
+  await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${spotifyDeviceId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ 
+      uris: [`spotify:track:${trackId}`],
+      position_ms: 0
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+}
+
+export async function togglePlay() {
+  if (spotifyPlayer) {
+    await spotifyPlayer.togglePlay();
+  }
+}
+
+export async function getCurrentState() {
+  if (!spotifyPlayer) return null;
+  return await spotifyPlayer.getCurrentState();
+}

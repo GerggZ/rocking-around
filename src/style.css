@@ -1,0 +1,346 @@
+/* --- BRIGHT SUNLIT MEADOW & MOUNTAIN PALETTE --- */
+:root {
+  --sky-top: #eef5f0;
+  --sky-bottom: #d5e5d8;
+  
+  --surface-inset: rgba(235, 217, 200, 0.85);
+  --border: rgba(60, 42, 30, 0.15);
+
+  --leaf-green: #2d6a4f;
+  --leaf-green-hover: #3a8362;
+  --leaf-glow: rgba(45, 106, 79, 0.2);
+
+  --walnut-brown: #6b4423;
+  --amber-sun: #d97724;
+
+  --text-dark: #1b281f;
+  --text-muted: #52473d;
+  --text-subtle: #7a6e62;
+  --text-on-green: #f4f8f5;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 2rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dark);
+  background-color: var(--sky-top);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Background Mountain Backdrop */
+.mountain-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: url('/src/assets/misty-mountains-bg.png') center / cover no-repeat;
+  filter: blur(8px);
+  transform: scale(1.05);
+}
+
+/* --- MAIN APP VIEWPORT --- */
+.app-viewport {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* --- FIXED-PROPORTION CARD BOARD --- */
+.card-board {
+  position: relative;
+  width: 420px;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.22));
+}
+
+.frame-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* --- INNER CARD CONTENT AREA --- */
+.card-content {
+  position: relative;
+  z-index: 2;
+  width: 260px;
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hidden { display: none !important; }
+
+.view-state {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+h2 {
+  margin: 0 0 0.25rem;
+  color: var(--text-dark);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+p {
+  margin: 0.3rem 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.dashboard-hint {
+  margin-top: 1rem;
+  font-weight: 600;
+  color: var(--walnut-brown);
+}
+
+/* --- STATE 3: GAME VIEW SPACING FIX --- */
+#game-view {
+  justify-content: flex-start; /* Stack top-down cleanly */
+  padding-top: 2rem;
+}
+
+/* Player Ring */
+.player-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0.5rem 0 0.4rem 0;
+  display: grid;
+  place-items: center;
+}
+
+.progress-ring { 
+  position: absolute; 
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  pointer-events: none; 
+}
+
+.progress-ring__fill {
+  stroke: var(--leaf-green);
+  stroke-dasharray: 295.3;
+  stroke-dashoffset: 295.3;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 55px 55px;
+}
+
+.progress-ring__dot {
+  fill: var(--leaf-green-hover);
+  filter: drop-shadow(0 0 3px var(--leaf-green));
+}
+
+.play-btn {
+  z-index: 2;
+  width: 64px;
+  height: 64px;
+  padding: 0 0 0 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-on-green);
+  font-size: 1.4rem;
+  background: var(--leaf-green);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 5px 14px var(--leaf-glow);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.play-btn:hover { 
+  background: var(--leaf-green-hover); 
+  transform: scale(1.03);
+}
+
+/* Tightened Track Info Box (Pushed Up) */
+.answer-slot {
+  width: 100%;
+  max-width: 220px;
+  margin-top: 0.5rem;
+}
+
+.answer-card {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  text-align: left;
+  background: var(--surface-inset);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--amber-sun);
+  border-radius: 0.6rem;
+}
+
+.answer-card h4 {
+  margin: 0 0 0.15rem 0;
+  font-size: 0.88rem;
+  color: var(--text-dark);
+}
+
+.answer-card p {
+  margin: 0;
+  font-size: 0.78rem;
+}
+
+.year-badge {
+  display: inline-block;
+  margin-top: 0.25rem;
+  color: var(--amber-sun);
+  font-size: 0.85rem;
+  font-weight: 750;
+}
+
+/* --- BUTTONS --- */
+.action-btn {
+  width: 100%;
+  max-width: 200px;
+  margin: 0.15rem 0;
+  padding: 0.55rem 1.15rem;
+  color: var(--text-on-green);
+  font-size: 0.82rem;
+  font-weight: 650;
+  background: var(--leaf-green);
+  border: 0;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px var(--leaf-glow);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: var(--leaf-green-hover);
+  box-shadow: 0 6px 16px rgba(45, 106, 79, 0.3);
+  transform: translateY(-1px);
+}
+
+/* --- EXTERNAL SECTION (SELECT CARD & BACK TO MENU) --- */
+#external-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.external-section {
+  width: 100%;
+  text-align: center;
+}
+
+.section-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 800;
+  color: var(--walnut-brown);
+}
+
+.track-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.track-link {
+  padding: 0.75rem;
+  color: var(--walnut-brown);
+  font-size: 0.85rem;
+  font-weight: 650;
+  text-decoration: none;
+  background: rgba(253, 251, 247, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+}
+
+.track-link:hover {
+  color: var(--text-on-green);
+  border-color: var(--leaf-green);
+  background: var(--leaf-green);
+  transform: translateY(-1px);
+}
+
+.outer-back-btn {
+  padding: 0.65rem 1.5rem;
+  color: var(--walnut-brown);
+  font-size: 0.85rem;
+  font-weight: 650;
+  background: rgba(253, 251, 247, 0.95);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.outer-back-btn:hover {
+  color: var(--text-dark);
+  background: rgba(253, 251, 247, 1);
+  transform: translateY(-1px);
+}
+
+/* --- AUTH STATUS BADGE --- */
+.status-badge {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 999px;
+}
+
+.status-badge.authenticated {
+  color: var(--leaf-green);
+  background: rgba(45, 106, 79, 0.12);
+  border: 1px solid rgba(45, 106, 79, 0.25);
+}
+
+.status-badge.unauthenticated {
+  color: var(--walnut-brown);
+  background: rgba(107, 68, 35, 0.12);
+  border: 1px solid rgba(107, 68, 35, 0.25);
+}
+
+@media (max-width: 450px) {
+  .app-viewport { transform: scale(0.92); }
+}
