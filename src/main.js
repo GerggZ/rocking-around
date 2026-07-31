@@ -1,5 +1,5 @@
 import * as auth from './login/authenticate.js';
-import { getTrackByNumber } from './tracks.js';
+import { loadTracksOnline, getTrackByNumber } from './tracks.js';
 
 import { renderUnauthenticatedView } from './views/unauthenticated.js';
 import { renderDashboardView } from './views/dashboard.js';
@@ -69,21 +69,30 @@ function handlePlayerStateChange(state) {
 }
 
 // --- MAIN APPLICATION ROUTER ---
-async function main() {
+async function initApp() {
+  // 1. Fetch live tracks CSV from GitHub online
+  await loadTracksOnline();
+
+  // 2. Check auth status & URL search params (checks both ?song= and ?card=)
   const authState = await auth.checkAuth();
   const urlParams = new URLSearchParams(window.location.search);
-  const songNumber = urlParams.get('song');
+  const songNumber = urlParams.get('song') || urlParams.get('card');
 
   // Clear External Mount Zone
   if (externalMount) externalMount.innerHTML = '';
 
   // STATE 1: Unauthenticated
   if (!authState.authenticated) {
+    // If a card was scanned before logging in, remember it!
+    if (songNumber) {
+      sessionStorage.setItem('pending_song', songNumber);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
     renderUnauthenticatedView(cardMount, () => auth.login('spotify'));
     return;
   }
 
-  // STATE 3: Active Card Player
+  // STATE 2: Active Card Player
   if (songNumber) {
     const trackData = getTrackByNumber(songNumber);
     if (!trackData) return;
@@ -110,16 +119,20 @@ async function main() {
       revealBtn.textContent = isHidden ? 'Reveal Track Info' : 'Hide Track Info';
     });
 
+    // Clean SDK Initialization — Play button enables when player is ready!
     await auth.initPlayer(
-      () => { if (playBtn) playBtn.disabled = false; },
+      () => { 
+        if (playBtn) playBtn.disabled = false; 
+      },
       (err) => { console.error(err); },
       handlePlayerStateChange
     );
   } 
-  // STATE 2: Authenticated Dashboard (Card Selection)
+  // STATE 3: Authenticated Dashboard (Opened homepage or no card active)
   else {
     renderDashboardView(cardMount, authState.provider);
   }
 }
 
-main();
+// Start the Application
+initApp();

@@ -18,8 +18,20 @@ export async function checkAuth() {
 
   if (code) {
     const token = await spotify.handleCallback(code);
+
+    // 🎯 Check if there was a saved card waiting before login!
+    const pendingSong = sessionStorage.getItem('pending_song');
+    if (pendingSong) {
+      sessionStorage.removeItem('pending_song');
+      // Jump straight to the scanned card!
+      window.location.href = `${window.location.pathname}?song=${pendingSong}`;
+      return { authenticated: true, token, provider: 'spotify' };
+    }
+
     return { authenticated: true, token, provider: 'spotify' };
-  } else if (spotify.getToken()) {
+  } 
+  
+  else if (spotify.getToken()) {
     return { authenticated: true, token: spotify.getToken(), provider: 'spotify' };
   }
 
