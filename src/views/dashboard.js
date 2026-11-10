@@ -1,4 +1,4 @@
-import { decks } from '../tracks.js';
+import { decks, getTrackById } from '../tracks.js';
 import { getPlayableCardIds, openRandomCard } from '../random-cards.js';
 
 export function renderDashboardView(container, providerName) {
@@ -28,8 +28,41 @@ export function renderDashboardView(container, providerName) {
       </details>
       <button id="random-card" class="action-btn" type="button">Play Random Card</button>
       <p id="deck-status" role="status"></p>
+      <form class="card-lookup" id="card-lookup">
+        <label class="section-title" for="card-lookup-id">Find Card by ID</label>
+        <div class="card-lookup-controls">
+          <input id="card-lookup-id" type="text" placeholder="Paste a UniqueID"
+                 autocomplete="off" autocapitalize="none" spellcheck="false"
+                 aria-describedby="card-lookup-status">
+          <button class="action-btn" type="submit">Open Card</button>
+        </div>
+        <p id="card-lookup-status" role="status"></p>
+      </form>
     </div>
   `;
+
+  const lookup = trackSection.querySelector('#card-lookup');
+  const lookupInput = lookup.querySelector('#card-lookup-id');
+  const lookupStatus = lookup.querySelector('#card-lookup-status');
+
+  lookupInput.addEventListener('input', () => {
+    lookupStatus.textContent = '';
+    lookupInput.removeAttribute('aria-invalid');
+  });
+
+  lookup.addEventListener('submit', event => {
+    event.preventDefault();
+    const id = lookupInput.value.trim();
+    const track = getTrackById(id) ?? getTrackById(id.toLowerCase());
+    if (!track) {
+      lookupStatus.textContent = id ? 'No card found for that ID.' : 'Enter a card ID.';
+      lookupInput.setAttribute('aria-invalid', 'true');
+      lookupInput.focus();
+      return;
+    }
+
+    window.location.href = '?' + new URLSearchParams({ song: track.UniqueID });
+  });
 
   const picker = trackSection.querySelector('.deck-picker');
   const summary = picker.querySelector('summary');

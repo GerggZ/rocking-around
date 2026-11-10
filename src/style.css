@@ -270,6 +270,46 @@ p {
   color: var(--walnut-brown);
 }
 
+.card-lookup {
+  width: min(100%, 18rem);
+  margin: 1.5rem auto 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.card-lookup label {
+  display: block;
+}
+
+.card-lookup-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.card-lookup input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.65rem 0.75rem;
+  color: var(--walnut-brown);
+  font-size: 1rem;
+  background: #fdfbf7;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+.card-lookup input:focus-visible {
+  outline: 2px solid var(--leaf-green);
+  outline-offset: 2px;
+}
+
+.card-lookup .action-btn {
+  min-height: 44px;
+  margin: 0;
+  padding-inline: 0.9rem;
+}
+
 .deck-picker {
   position: relative;
   width: min(100%, 18rem);
