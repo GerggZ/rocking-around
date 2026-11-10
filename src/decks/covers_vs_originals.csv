@@ -1,0 +1,53 @@
+id,title,artist,album,year,spotify,apple,youtube,UniqueID
+1,"La Bamba","Ritchie Valens","",1958,,,,9514688dd506
+2,"I'm Tore Down","Freddie King","",1961,,,,fe926d3a07c7
+3,"Twist and Shout","The Top Notes","",1961,,,,d6a4caef6b67
+4,"Twist And Shout - Remastered 2009","The Beatles","Please Please Me",1963,5ZBeML7Lf3FMEVviTyvi8l,,,53fc7ae8b802
+5,"Red Rubber Ball","The Cyrkle","",1966,,,,405a171d13e6
+6,"I'm a Believer","The Monkees","",1966,,,,51e558ca8486
+7,"Brown Eyed Girl","Van Morrison","",1967,3yrSvpt2l1xhsV9Em88Pul,,,29f9d83309bb
+8,"Hooked on a Feeling","B. J. Thomas","",1968,,,,7a2e00421692
+9,"Hooked On A Feeling","Blue Swede","Hooked On A Feeling",1973,6Ac4NVYYl2U73QiTt11ZKd,,,7109dec96c6e
+10,"I Will Always Love You","Dolly Parton","",1974,,,,5f505aa10b65
+11,"I Will Survive","Gloria Gaynor","",1978,,,,7852e9f24b6c
+12,"Come On Eileen","Dexys Midnight Runners","",1982,,,,d9ab0f84ccf6
+13,"Africa","Toto","",1982,,,,6c8a0e0565c9
+14,"Take on Me","a-ha","Hunting High and Low",1985,2WfaOiMkCvy7F5fcp2zZ8L,,,20ba7a88df33
+15,"La Bamba","Los Lobos","La Bamba / Charlena",1987,0uMMLry3hzWGn3q3loqMkm,,,bdb7f4d7fa6f
+16,"Punk Rock Girl","The Dead Milkmen","",1988,,,,6977fc65a10f
+17,"I Will Always Love You","Whitney Houston","",1992,,,,7e41e690e01c
+18,"I'm Tore Down","Eric Clapton","From The Cradle",1994,,,,d672c78020f1
+19,"I Will Survive","Cake","Fashion Nugget",1996,,,,23b29f10f793
+20,"Hell","Squirrel Nut Zippers","",1996,,,,d5cd854bc879
+21,"My Heart Will Go On","Céline Dion","",1997,,,,b897a27f4933
+22,"MMMBop","Hanson","",1997,,,,ade9f1ae095a
+23,"Come on Eileen","Save Ferris","It Means Everything",1997,4Z4xFENnvMnRDPpAx5wpaO,,,9628020594e8
+24,"Take On Me","Reel Big Fish","",1998,,,,dfd74b5e9a69
+25,"I'm A Believer - From ""Shrek"" Motion Picture Soundtrack","Smash Mouth","Shrek",2001,0mBL2JwjNYKtdFacHxvtJt,,,ca83ec05d7a9
+26,"Stacy's Mom","Fountains Of Wayne","Welcome Interstate Managers",2003,27L8sESb3KR79asDUBu8nW,,,a08eae93f89e
+27,"Such Great Heights","The Postal Service","",2003,,,,539ac69e8e5c
+28,"Paper Planes","M.I.A.","",2007,,,,bfeab1f13419
+29,"Bad Romance","Lady Gaga","",2009,,,,5b962824698a
+30,"Brown Eyed Girl","Reel Big Fish","Fame, Fortune, And Fornication",2009,2lbAU3IQytWjl9b0LLuztk,,,dad001840421
+31,"Hell","Streetlight Manifesto","99 Songs of Revolution: Volume I",2010,,,,9667cc5ced8a
+32,"Punk Rock Girl","Streetlight Manifesto","99 Songs of Revolution: Volume I",2010,,,,5ffcd2a47bd1
+33,"Red Rubber Ball","Streetlight Manifesto","",2010,52DW5npyBrn3QMKcQqQhKS,,,8b370628cf95
+34,"Such Great Heights","Streetlight Manifesto","",2010,26rMsVy6Oa4rK9ue7GW0gU,,,73711bcc9cbd
+35,"Call Me Maybe","Carly Rae Jepsen","",2011,,,,4dc5b3e5d72f
+36,"Somebody That I Used to Know (feat. Kimbra)","Gotye","",2011,,,,3b1c0d8765d9
+37,"I Need Your Love (feat. Ellie Goulding)","Calvin Harris","",2012,,,,6aacd5efd576
+38,"Somebody That I Used to Know","Pentatonix","PTX, Vol. 1",2012,5XPSElbh3y0S1Jl0ggpwQr,,,b3e1490405fa
+39,"Take Me to Church","Hozier","",2013,2EiGECydkS2M8OCcRHQZhT,,,4637ca0864dc
+40,"I Need Your Love","Pentatonix","PTX, Vol. 2",2013,5YrtgdqeCgcOu9m0dliQs6,,,70cb0af4f247
+41,"Timber (feat. Kesha)","Pitbull","",2013,,,,522dcdb6fbfb
+42,"Call Me Maybe","Scott Bradlee's Postmodern Jukebox","Twist Is The New Twerk",2013,4cRPlIJxFb4ydBUgawsnXM,,,46171943e3e4
+43,"All About That Bass","Meghan Trainor","",2014,,,,d07e14dcfa5d
+44,"All About That Bass","Scott Bradlee's Postmodern Jukebox","Historical Misappropriation",2014,1jZRJKE7GZdiZzVgMS9mv2,,,43e799a010da
+45,"Stacy’s Mom","Scott Bradlee's Postmodern Jukebox","Selfies on Kodachrome",2014,3TOGVJQaCQPE4J3JiSncwG,,,658d64a45a0d
+46,"Timber","Scott Bradlee's Postmodern Jukebox","Twist Is The New Twerk",2014,34gz4EkB8fx3JMe4Qb3op1,,,6ad6bc0dda87
+47,"Bad Romance","Scott Bradlee's Postmodern Jukebox","Emoji Antique",2015,5xrHvVmSF3ui0EKI8FArv3,,,67b073f89af2
+48,"Paper Planes","Scott Bradlee's Postmodern Jukebox","Emoji Antique",2015,1YQY7ODoHmrfDwzgshRBKq,,,d72581e098ec
+49,"Take Me To Church","Scott Bradlee's Postmodern Jukebox","Emoji Antique",2015,2YwlwV98tjcKF664eEAAyV,,,fc6e7215c86d
+50,"MMMbop","Scott Bradlee's Postmodern Jukebox","Squad Goals",2016,2jt8tEFZ4qZJ1ax3b0Io5f,,,73c52d6eaac7
+51,"My Heart Will Go On","Scott Bradlee's Postmodern Jukebox","Squad Goals",2016,3qhgkT74IpVAjk5xjNylHC,,,680b6a706161
+52,"Africa","Weezer","Africa",2018,36Pim2ANczp82lCWIb8GHy,,,2e16ab2e3d7d

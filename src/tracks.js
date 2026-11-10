@@ -1,66 +1,38 @@
-// Replace with your raw GitHub CSV URL
-const ONLINE_CSV_URL = 'https://raw.githubusercontent.com/gerggz/rocking-around/main/src/tracks.csv';
+import myHits from './decks/my_hits.csv?raw';
+import country from './decks/country.csv?raw';
+import classic from './decks/classic.csv?raw';
+import oneHitWonders from './decks/one_hit_wonders.csv?raw';
+import covers from './decks/covers_vs_originals.csv?raw';
 
-function parseCSV(csv) {
-  const lines = csv.trim().split(/\r?\n/);
-  if (lines.length < 2) return {};
-  
-  const headers = lines[0].split(',').map(h => h.trim());
-  const database = {};
+function parseDeck(csv) {
+  const [header, ...lines] = csv.trim().split(/\r?\n/);
+  const columns = header.split(',');
 
-  for (let i = 1; i < lines.length; i++) {
-    const line = lines[i];
-    if (!line) continue;
+  return lines.map(line => {
+    const values = [...line.matchAll(/(?:^|,)(?:"((?:[^"]|"")*)"|([^,]*))/g)]
+      .map(([, quoted, plain]) => quoted === undefined ? plain : quoted.replaceAll('""', '"'));
+    return Object.fromEntries(columns.map((column, index) => [column, values[index]]));
+  });
+}
 
-    const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-    const cleanValues = values.map(v => v.replace(/^"|"$/g, '').trim());
+export const decks = [
+  { id: 'my-hits', name: 'My Hits', csv: myHits },
+  { id: 'country', name: 'Country', csv: country },
+  { id: 'classic', name: 'Classic Hitster', csv: classic },
+  { id: 'one-hit-wonders', name: 'One-Hit Wonders', csv: oneHitWonders },
+  { id: 'covers-vs-originals', name: 'Covers vs Originals', csv: covers }
+].map(({ id, name, csv }) => ({ id, name, tracks: parseDeck(csv) }));
 
-    const entry = {};
-    headers.forEach((header, index) => {
-      let val = cleanValues[index] || '';
-      if (header === 'year' || header === 'id') {
-        val = Number(val) || val;
-      }
-      entry[header] = val;
-    });
-
-    if (entry.id) {
-      database[entry.id] = {
-        title: entry.title,
-        artist: entry.artist,
-        album: entry.album,
-        year: entry.year,
-        spotify: entry.spotify || '',
-        apple: entry.apple || '',
-        youtube: entry.youtube || ''
-      };
+const recordings = new Map();
+for (const { tracks } of decks) {
+  for (const track of tracks) {
+    const existing = recordings.get(track.UniqueID);
+    if (!existing || (!existing.spotify && track.spotify)) {
+      recordings.set(track.UniqueID, track);
     }
   }
-
-  return database;
 }
 
-export let TRACK_DATABASE = {};
-
-export async function loadTracksOnline() {
-  try {
-    const response = await fetch(ONLINE_CSV_URL);
-    if (!response.ok) throw new Error('Failed to fetch tracks CSV');
-    const csvText = await response.text();
-    TRACK_DATABASE = parseCSV(csvText);
-    return TRACK_DATABASE;
-  } catch (err) {
-    console.error('Error loading dynamic tracks:', err);
-    return {};
-  }
-}
-
-export function getTrackByNumber(songNumber) {
-  return TRACK_DATABASE[songNumber] || null;
-}
-
-export function getPlatformTrackId(songNumber, provider = 'spotify') {
-  const song = TRACK_DATABASE[songNumber];
-  if (!song) return null;
-  return song[provider] || null;
+export function getTrackById(id) {
+  return recordings.get(id) ?? null;
 }

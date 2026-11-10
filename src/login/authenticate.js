@@ -24,7 +24,7 @@ export async function checkAuth() {
     if (pendingSong) {
       sessionStorage.removeItem('pending_song');
       // Jump straight to the scanned card!
-      window.location.href = `${window.location.pathname}?song=${pendingSong}`;
+      window.location.href = `${window.location.pathname}?song=${encodeURIComponent(pendingSong)}`;
       return { authenticated: true, token, provider: 'spotify' };
     }
 

@@ -1,5 +1,5 @@
 import * as auth from './login/authenticate.js';
-import { loadTracksOnline, getTrackByNumber } from './tracks.js';
+import { getTrackById } from './tracks.js';
 
 import { renderUnauthenticatedView } from './views/unauthenticated.js';
 import { renderDashboardView } from './views/dashboard.js';
@@ -70,13 +70,9 @@ function handlePlayerStateChange(state) {
 
 // --- MAIN APPLICATION ROUTER ---
 async function initApp() {
-  // 1. Fetch live tracks CSV from GitHub online
-  await loadTracksOnline();
-
-  // 2. Check auth status & URL search params (checks both ?song= and ?card=)
   const authState = await auth.checkAuth();
   const urlParams = new URLSearchParams(window.location.search);
-  const songNumber = urlParams.get('song') || urlParams.get('card');
+  const songId = urlParams.get('song') || urlParams.get('card');
 
   // Clear External Mount Zone
   if (externalMount) externalMount.innerHTML = '';
@@ -84,8 +80,8 @@ async function initApp() {
   // STATE 1: Unauthenticated
   if (!authState.authenticated) {
     // If a card was scanned before logging in, remember it!
-    if (songNumber) {
-      sessionStorage.setItem('pending_song', songNumber);
+    if (songId) {
+      sessionStorage.setItem('pending_song', songId);
       window.history.replaceState({}, document.title, window.location.pathname);
     }
     renderUnauthenticatedView(cardMount, () => auth.login('spotify'));
@@ -93,9 +89,12 @@ async function initApp() {
   }
 
   // STATE 2: Active Card Player
-  if (songNumber) {
-    const trackData = getTrackByNumber(songNumber);
-    if (!trackData) return;
+  if (songId) {
+    const trackData = getTrackById(songId);
+    if (!trackData) {
+      cardMount.innerHTML = `<p>Card not found.</p><a href="${import.meta.env.BASE_URL}">Back to Menu</a>`;
+      return;
+    }
 
     currentTrackId = trackData[authState.provider];
     renderPlayerView(cardMount, trackData);
@@ -118,6 +117,11 @@ async function initApp() {
       const isHidden = answerBox.classList.toggle('hidden');
       revealBtn.textContent = isHidden ? 'Reveal Track Info' : 'Hide Track Info';
     });
+
+    if (!currentTrackId) {
+      document.getElementById('status-msg').textContent = 'Playback is unavailable for this card.';
+      return;
+    }
 
     // Clean SDK Initialization — Play button enables when player is ready!
     await auth.initPlayer(

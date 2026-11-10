@@ -17,14 +17,18 @@ export function renderPlayerView(container, trackData) {
 
       <div class="answer-slot">
         <div id="answer-box" class="answer-card hidden">
-          <h4>${trackData.title}</h4>
-          <p>${trackData.artist}</p>
-          <p style="color: var(--text-subtle); font-size: 0.78rem;">${trackData.album}</p>
-          <div class="year-badge">${trackData.year}</div>
+          <h4 id="track-title"></h4>
+          <p id="track-artist"></p>
+          <p id="track-album" style="color: var(--text-subtle); font-size: 0.78rem;"></p>
+          <div id="track-year" class="year-badge"></div>
         </div>
       </div>
     </div>
   `;
+
+  for (const field of ['title', 'artist', 'album', 'year']) {
+    container.querySelector(`#track-${field}`).textContent = trackData[field];
+  }
 
   // Render Outer Back Button Below
   const externalSection = document.getElementById('external-content');
@@ -33,7 +37,7 @@ export function renderPlayerView(container, trackData) {
       <button id="back-home-btn" class="outer-back-btn">← Back to Menu</button>
     `;
     document.getElementById('back-home-btn')?.addEventListener('click', () => {
-      window.location.href = '/';
+      window.location.href = import.meta.env.BASE_URL;
     });
   }
 }
