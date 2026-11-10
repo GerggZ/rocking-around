@@ -54,13 +54,30 @@ export async function handleCallback(code) {
   const data = await response.json();
   if (data.access_token) {
     sessionStorage.setItem('spotify_access_token', data.access_token);
+    sessionStorage.setItem('spotify_token_expires_at', String(Date.now() + data.expires_in * 1000));
     return data.access_token;
   }
   throw new Error("Failed to retrieve access token");
 }
 
 export function getToken() {
+  const expiresAt = sessionStorage.getItem('spotify_token_expires_at');
+  if (expiresAt && Number(expiresAt) <= Date.now()) {
+    clearSession();
+    return null;
+  }
   return sessionStorage.getItem('spotify_access_token');
+}
+
+function clearSession() {
+  sessionStorage.removeItem('spotify_access_token');
+  sessionStorage.removeItem('spotify_token_expires_at');
+}
+
+function returnToSignIn() {
+  clearSession();
+  spotifyPlayer?.disconnect();
+  window.location.reload();
 }
 
 function loadSDK() {
@@ -76,11 +93,14 @@ function loadSDK() {
 
 export async function initPlayer(onReady, onError, onStateChange) {
   await loadSDK();
-  const token = getToken();
 
   spotifyPlayer = new Spotify.Player({
     name: 'RockingAround Game',
-    getOAuthToken: cb => cb(token),
+    getOAuthToken: callback => {
+      const token = getToken();
+      if (token) callback(token);
+      else returnToSignIn();
+    },
     volume: 0.8
   });
 
@@ -93,6 +113,7 @@ export async function initPlayer(onReady, onError, onStateChange) {
     if (onStateChange) onStateChange(state);
   });
 
+  spotifyPlayer.addListener('authentication_error', returnToSignIn);
   spotifyPlayer.addListener('initialization_error', ({ message }) => onError(message));
   spotifyPlayer.addListener('account_error', ({ message }) => onError("Requires Spotify Premium"));
   
@@ -101,7 +122,11 @@ export async function initPlayer(onReady, onError, onStateChange) {
 
 export async function playTrack(trackId) {
   const token = getToken();
-  await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${spotifyDeviceId}`, {
+  if (!token) {
+    returnToSignIn();
+    return;
+  }
+  const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${spotifyDeviceId}`, {
     method: 'PUT',
     body: JSON.stringify({ 
       uris: [`spotify:track:${trackId}`],
@@ -112,6 +137,7 @@ export async function playTrack(trackId) {
       'Authorization': `Bearer ${token}`
     }
   });
+  if (response.status === 401) returnToSignIn();
 }
 
 export async function pauseTrack() {
