@@ -18,9 +18,9 @@ export function renderDashboardView(container, providerName) {
   trackSection.innerHTML = `
     <div class="external-section">
       <form class="card-lookup" id="card-lookup">
-        <label class="section-title" for="card-lookup-id">Find Card by ID</label>
+        <label class="section-title" for="card-lookup-id">Card Code</label>
         <div class="card-lookup-controls">
-          <input id="card-lookup-id" type="text" placeholder="Paste a UniqueID"
+          <input id="card-lookup-id" type="text"
                  autocomplete="off" autocapitalize="none" spellcheck="false"
                  aria-describedby="card-lookup-status">
           <button class="action-btn" type="submit">Open Card</button>
@@ -55,7 +55,7 @@ export function renderDashboardView(container, providerName) {
     const id = lookupInput.value.trim();
     const track = getTrackById(id) ?? getTrackById(id.toLowerCase());
     if (!track) {
-      lookupStatus.textContent = id ? 'No card found for that ID.' : 'Enter a card ID.';
+      lookupStatus.textContent = id ? 'No card found for that code.' : 'Enter a card code.';
       lookupInput.setAttribute('aria-invalid', 'true');
       lookupInput.focus();
       return;
