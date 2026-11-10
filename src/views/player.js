@@ -10,17 +10,17 @@ export function renderPlayerView(container, trackData, onNextRandomCard) {
           <circle id="progress-dot" class="progress-ring__dot" r="4" cx="55" cy="8"/>
         </svg>
 
-        <button id="play-pause-btn" class="play-btn" disabled>▶</button>
+        <button id="play-pause-btn" class="play-btn" aria-label="Play" disabled>▶</button>
       </div>
 
-      <button id="reveal-btn" class="action-btn">Reveal Track Info</button>
+      <button id="reveal-btn" class="action-btn" aria-expanded="false" aria-controls="answer-box">Reveal the year</button>
 
       <div class="answer-slot">
         <div id="answer-box" class="answer-card hidden">
+          <div id="track-year" class="year-badge"></div>
           <h4 id="track-title"></h4>
           <p id="track-artist"></p>
           <p id="track-album" style="color: var(--text-subtle); font-size: 0.78rem;"></p>
-          <div id="track-year" class="year-badge"></div>
         </div>
       </div>
     </div>
