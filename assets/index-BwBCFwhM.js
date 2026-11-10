@@ -615,30 +615,18 @@
 52,"Africa","Weezer","Africa",2018,36Pim2ANczp82lCWIb8GHy,,,2e16ab2e3d7d\r
 `;function O(e){let[t,...n]=e.trim().split(/\r?\n/),r=t.split(`,`);return n.map(e=>{let t=[...e.matchAll(/(?:^|,)(?:"((?:[^"]|"")*)"|([^,]*))/g)].map(([,e,t])=>e===void 0?t:e.replaceAll(`""`,`"`));return Object.fromEntries(r.map((e,n)=>[e,t[n]]))})}var k=[{id:`my-hits`,name:`My Hits`,csv:C},{id:`country`,name:`Country`,csv:w},{id:`classic`,name:`Classic Hitster`,csv:T},{id:`one-hit-wonders`,name:`One-Hit Wonders`,csv:E},{id:`covers-vs-originals`,name:`Covers vs Originals`,csv:D}].map(({id:e,name:t,csv:n})=>({id:e,name:t,tracks:O(n)})),A=new Map;for(let{tracks:e}of k)for(let t of e){let e=A.get(t.UniqueID);(!e||!e.spotify&&t.spotify)&&A.set(t.UniqueID,t)}function j(e){return A.get(e)??null}var M=`pending_random_draw`;function N(e,t){return[...new Set(e.tracks.map(e=>e.UniqueID))].filter(e=>j(e)?.[t])}function P(e,t){let n=t[Math.floor(Math.random()*t.length)];sessionStorage.setItem(M,new URLSearchParams({song:n,deck:e.id}).toString()),window.location.href=`?`+new URLSearchParams({song:n})}function F(e){let t=new URLSearchParams(sessionStorage.getItem(M));return sessionStorage.removeItem(M),e&&t.get(`song`)===e&&window.history.replaceState({...window.history.state,randomDeckId:t.get(`deck`)},``),k.find(t=>t.id===window.history.state?.randomDeckId&&t.tracks.some(t=>t.UniqueID===e))}function I(e,t){e.innerHTML=`
     <div id="login-view" class="view-state">
-      <h2>Rockin' Around</h2>
-      <div class="status-badge unauthenticated">Not Authenticated</div>
-      <p>Log in with a streaming provider to start playing:</p>
-      <button id="login-spotify-btn" class="action-btn">Log in with Spotify</button>
+      <h1>Rockin' Around</h1>
+      <p>Play a song. Guess the year.</p>
+      <button id="login-spotify-btn" class="action-btn">Connect Spotify</button>
     </div>
   `,document.getElementById(`login-spotify-btn`)?.addEventListener(`click`,t)}function L(e,t){e.innerHTML=`
     <div id="dashboard-view" class="view-state">
       <h2>Rockin' Around</h2>
-      <div class="status-badge authenticated">CONNECTED (${t.toUpperCase()})</div>
-      <p class="dashboard-hint">Choose a deck and draw a random card.</p>
+      <p class="dashboard-hint">Ready to play</p>
     </div>
   `;let n=document.getElementById(`external-content`);if(!n)return;n.innerHTML=`
     <div class="external-section">
-      <form class="card-lookup" id="card-lookup">
-        <label class="section-title" for="card-lookup-id">Find Card by ID</label>
-        <div class="card-lookup-controls">
-          <input id="card-lookup-id" type="text" placeholder="Paste a UniqueID"
-                 autocomplete="off" autocapitalize="none" spellcheck="false"
-                 aria-describedby="card-lookup-status">
-          <button class="action-btn" type="submit">Open Card</button>
-        </div>
-        <p id="card-lookup-status" role="status"></p>
-      </form>
-      <h3 id="deck-picker-title" class="section-title">Select Deck</h3>
+      <h3 id="deck-picker-title" class="section-title">Choose a deck</h3>
       <details class="deck-picker">
         <summary aria-labelledby="deck-picker-title deck-selection">
           <span id="deck-selection"></span>
@@ -647,10 +635,23 @@
           ${k.map(e=>`<li><button type="button" data-deck-id="${e.id}">${e.name}</button></li>`).join(``)}
         </ul>
       </details>
-      <button id="random-card" class="action-btn" type="button">Play Random Card</button>
+      <button id="random-card" class="action-btn" type="button">Draw a card</button>
       <p id="deck-status" role="status"></p>
+      <details class="card-lookup">
+        <summary>Enter a card code</summary>
+        <form id="card-lookup">
+          <label class="section-title" for="card-lookup-id">Card Code</label>
+          <div class="card-lookup-controls">
+            <input id="card-lookup-id" type="text"
+                   autocomplete="off" autocapitalize="none" spellcheck="false"
+                   aria-describedby="card-lookup-status">
+            <button class="action-btn" type="submit">Open Card</button>
+          </div>
+          <p id="card-lookup-status" role="status"></p>
+        </form>
+      </details>
     </div>
-  `;let r=n.querySelector(`#card-lookup`),i=r.querySelector(`#card-lookup-id`),a=r.querySelector(`#card-lookup-status`);i.addEventListener(`input`,()=>{a.textContent=``,i.removeAttribute(`aria-invalid`)}),r.addEventListener(`submit`,e=>{e.preventDefault();let t=i.value.trim(),n=j(t)??j(t.toLowerCase());if(!n){a.textContent=t?`No card found for that ID.`:`Enter a card ID.`,i.setAttribute(`aria-invalid`,`true`),i.focus();return}window.location.href=`?`+new URLSearchParams({song:n.UniqueID})});let o=n.querySelector(`.deck-picker`),s=o.querySelector(`summary`),c=o.querySelector(`#deck-selection`),l=o.querySelectorAll(`[data-deck-id]`),u=n.querySelector(`#random-card`),d=n.querySelector(`#deck-status`),f=sessionStorage.getItem(`selected_deck`),p,m=[];function h(e){p=e,c.textContent=e.name;for(let t of l)t.setAttribute(`aria-pressed`,String(t.dataset.deckId===e.id));m=N(e,t),u.disabled=m.length===0,d.textContent=u.disabled?`This deck has no playable cards.`:``}u.addEventListener(`click`,()=>{u.disabled||P(p,m)});function g(){o.open=!1,s.focus()}for(let e of l)e.addEventListener(`click`,()=>{let t=k.find(t=>t.id===e.dataset.deckId);sessionStorage.setItem(`selected_deck`,t.id),h(t),g()});o.addEventListener(`keydown`,e=>{e.key===`Escape`&&o.open&&(e.preventDefault(),g())}),o.addEventListener(`focusout`,e=>{o.contains(e.relatedTarget)||(o.open=!1)}),h(k.find(e=>e.id===f)??k[0])}function R(e,t,n){e.innerHTML=`
+  `;let r=n.querySelector(`#card-lookup`),i=r.querySelector(`#card-lookup-id`),a=r.querySelector(`#card-lookup-status`);i.addEventListener(`input`,()=>{a.textContent=``,i.removeAttribute(`aria-invalid`)}),r.addEventListener(`submit`,e=>{e.preventDefault();let t=i.value.trim(),n=j(t)??j(t.toLowerCase());if(!n){a.textContent=t?`No card found for that code.`:`Enter a card code.`,i.setAttribute(`aria-invalid`,`true`),i.focus();return}window.location.href=`?`+new URLSearchParams({song:n.UniqueID})});let o=n.querySelector(`.deck-picker`),s=o.querySelector(`summary`),c=o.querySelector(`#deck-selection`),l=o.querySelectorAll(`[data-deck-id]`),u=n.querySelector(`#random-card`),d=n.querySelector(`#deck-status`),f=sessionStorage.getItem(`selected_deck`),p,m=[];function h(e){p=e,c.textContent=e.name;for(let t of l)t.setAttribute(`aria-pressed`,String(t.dataset.deckId===e.id));m=N(e,t),u.disabled=m.length===0,d.textContent=u.disabled?`This deck has no playable cards.`:``}u.addEventListener(`click`,()=>{u.disabled||P(p,m)});function g(){o.open=!1,s.focus()}for(let e of l)e.addEventListener(`click`,()=>{let t=k.find(t=>t.id===e.dataset.deckId);sessionStorage.setItem(`selected_deck`,t.id),h(t),g()});o.addEventListener(`keydown`,e=>{e.key===`Escape`&&o.open&&(e.preventDefault(),g())}),o.addEventListener(`focusout`,e=>{o.contains(e.relatedTarget)||(o.open=!1)}),h(k.find(e=>e.id===f)??k[0])}function R(e,t,n){e.innerHTML=`
     <div id="game-view" class="view-state">
       <p id="status-msg" class="status-msg"></p>
 
@@ -661,21 +662,21 @@
           <circle id="progress-dot" class="progress-ring__dot" r="4" cx="55" cy="8"/>
         </svg>
 
-        <button id="play-pause-btn" class="play-btn" disabled>▶</button>
+        <button id="play-pause-btn" class="play-btn" aria-label="Play" disabled>▶</button>
       </div>
 
-      <button id="reveal-btn" class="action-btn">Reveal Track Info</button>
+      <button id="reveal-btn" class="action-btn" aria-expanded="false" aria-controls="answer-box">Reveal the year</button>
 
       <div class="answer-slot">
         <div id="answer-box" class="answer-card hidden">
+          <div id="track-year" class="year-badge"></div>
           <h4 id="track-title"></h4>
           <p id="track-artist"></p>
           <p id="track-album" style="color: var(--text-subtle); font-size: 0.78rem;"></p>
-          <div id="track-year" class="year-badge"></div>
         </div>
       </div>
     </div>
   `;for(let n of[`title`,`artist`,`album`,`year`])e.querySelector(`#track-${n}`).textContent=t[n];let r=document.getElementById(`external-content`);if(r){r.innerHTML=`
       ${n?`<button id="next-random-card" class="action-btn" type="button">Next Random Card</button>`:``}
       <button id="back-home-btn" class="outer-back-btn">← Back to Menu</button>
-    `;let e=r.querySelector(`#next-random-card`);e?.addEventListener(`click`,async()=>{e.disabled=!0;try{await n()}finally{e.disabled=!1}}),document.getElementById(`back-home-btn`)?.addEventListener(`click`,()=>{window.location.href=`/rocking-around/`})}}var z=document.getElementById(`card-mount`),B=document.getElementById(`external-content`),V=null,H=!1,U=!1,W=null;function G(e,t){let n=document.getElementById(`progress-fill`),r=document.getElementById(`progress-dot`);if(!t||t===0||!n||!r)return;let i=Math.min(e/t,1),a=295.3-i*295.3;n.style.strokeDashoffset=a;let o=i*2*Math.PI;r.setAttribute(`cx`,(55+47*Math.sin(o)).toFixed(2)),r.setAttribute(`cy`,(55-47*Math.cos(o)).toFixed(2))}function K(){q();async function e(){let t=await S();t&&!t.paused?(G(t.position,t.duration),W=requestAnimationFrame(e)):q()}W=requestAnimationFrame(e)}function q(){W&&=(cancelAnimationFrame(W),null)}function J(e){if(!e)return;H=!e.paused;let t=document.getElementById(`play-pause-btn`);t&&(H?(t.textContent=`❚❚`,t.style.paddingLeft=`0px`,K()):(t.textContent=`▶`,t.style.paddingLeft=`3px`,q(),G(e.position,e.duration)))}async function Y(){let e=await _(),t=new URLSearchParams(window.location.search),n=t.get(`song`)||t.get(`card`);if(B&&(B.innerHTML=``),!e.authenticated){n&&(sessionStorage.setItem(`pending_song`,n),window.history.replaceState({},document.title,window.location.pathname)),I(z,()=>g(`spotify`));return}let r=F(n);if(n){let t=j(n);if(!t){z.innerHTML=`<p>Card not found.</p><a href="/rocking-around/">Back to Menu</a>`;return}V=t[e.provider];let i=r?N(r,e.provider).filter(e=>e!==n):[];R(z,t,i.length?async()=>{if(U)try{await b()}catch(e){console.error(`Could not pause the current card:`,e)}P(r,i)}:null);let a=document.getElementById(`play-pause-btn`),o=document.getElementById(`reveal-btn`),s=document.getElementById(`answer-box`);if(a?.addEventListener(`click`,async()=>{U?await x():(await y(V),U=!0)}),o?.addEventListener(`click`,()=>{let e=s.classList.toggle(`hidden`);o.textContent=e?`Reveal Track Info`:`Hide Track Info`}),!V){document.getElementById(`status-msg`).textContent=`Playback is unavailable for this card.`;return}await v(()=>{a&&(a.disabled=!1)},e=>{console.error(e)},J)}else L(z,e.provider)}Y();
+    `;let e=r.querySelector(`#next-random-card`);e?.addEventListener(`click`,async()=>{e.disabled=!0;try{await n()}finally{e.disabled=!1}}),document.getElementById(`back-home-btn`)?.addEventListener(`click`,()=>{window.location.href=`/rocking-around/`})}}var z=document.getElementById(`card-mount`),B=document.getElementById(`external-content`),V=null,H=!1,U=!1,W=null;function G(e,t){let n=document.getElementById(`progress-fill`),r=document.getElementById(`progress-dot`);if(!t||t===0||!n||!r)return;let i=Math.min(e/t,1),a=295.3-i*295.3;n.style.strokeDashoffset=a;let o=i*2*Math.PI;r.setAttribute(`cx`,(55+47*Math.sin(o)).toFixed(2)),r.setAttribute(`cy`,(55-47*Math.cos(o)).toFixed(2))}function K(){q();async function e(){let t=await S();t&&!t.paused?(G(t.position,t.duration),W=requestAnimationFrame(e)):q()}W=requestAnimationFrame(e)}function q(){W&&=(cancelAnimationFrame(W),null)}function J(e){if(!e)return;H=!e.paused;let t=document.getElementById(`play-pause-btn`);t&&(H?(t.textContent=`❚❚`,t.setAttribute(`aria-label`,`Pause`),t.style.paddingLeft=`0px`,K()):(t.textContent=`▶`,t.setAttribute(`aria-label`,`Play`),t.style.paddingLeft=`3px`,q(),G(e.position,e.duration)))}async function Y(){let e=await _(),t=new URLSearchParams(window.location.search),n=t.get(`song`)||t.get(`card`);if(B&&(B.innerHTML=``),!e.authenticated){n&&(sessionStorage.setItem(`pending_song`,n),window.history.replaceState({},document.title,window.location.pathname)),I(z,()=>g(`spotify`));return}let r=F(n);if(n){let t=j(n);if(!t){z.innerHTML=`<p>Card not found.</p><a href="/rocking-around/">Back to Menu</a>`;return}V=t[e.provider];let i=r?N(r,e.provider).filter(e=>e!==n):[];R(z,t,i.length?async()=>{if(U)try{await b()}catch(e){console.error(`Could not pause the current card:`,e)}P(r,i)}:null);let a=document.getElementById(`play-pause-btn`),o=document.getElementById(`reveal-btn`),s=document.getElementById(`answer-box`);if(a?.addEventListener(`click`,async()=>{U?await x():(await y(V),U=!0)}),o?.addEventListener(`click`,()=>{let e=s.classList.toggle(`hidden`);o.setAttribute(`aria-expanded`,String(!e)),o.textContent=e?`Reveal the year`:`Hide the answer`}),!V){document.getElementById(`status-msg`).textContent=`Playback is unavailable for this card.`;return}await v(()=>{a&&(a.disabled=!1)},e=>{console.error(e)},J)}else L(z,e.provider)}Y();
