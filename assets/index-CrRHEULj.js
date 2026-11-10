@@ -628,6 +628,16 @@
     </div>
   `;let n=document.getElementById(`external-content`);if(!n)return;n.innerHTML=`
     <div class="external-section">
+      <form class="card-lookup" id="card-lookup">
+        <label class="section-title" for="card-lookup-id">Find Card by ID</label>
+        <div class="card-lookup-controls">
+          <input id="card-lookup-id" type="text" placeholder="Paste a UniqueID"
+                 autocomplete="off" autocapitalize="none" spellcheck="false"
+                 aria-describedby="card-lookup-status">
+          <button class="action-btn" type="submit">Open Card</button>
+        </div>
+        <p id="card-lookup-status" role="status"></p>
+      </form>
       <h3 id="deck-picker-title" class="section-title">Select Deck</h3>
       <details class="deck-picker">
         <summary aria-labelledby="deck-picker-title deck-selection">
@@ -639,16 +649,6 @@
       </details>
       <button id="random-card" class="action-btn" type="button">Play Random Card</button>
       <p id="deck-status" role="status"></p>
-      <form class="card-lookup" id="card-lookup">
-        <label class="section-title" for="card-lookup-id">Find Card by ID</label>
-        <div class="card-lookup-controls">
-          <input id="card-lookup-id" type="text" placeholder="Paste a UniqueID"
-                 autocomplete="off" autocapitalize="none" spellcheck="false"
-                 aria-describedby="card-lookup-status">
-          <button class="action-btn" type="submit">Open Card</button>
-        </div>
-        <p id="card-lookup-status" role="status"></p>
-      </form>
     </div>
   `;let r=n.querySelector(`#card-lookup`),i=r.querySelector(`#card-lookup-id`),a=r.querySelector(`#card-lookup-status`);i.addEventListener(`input`,()=>{a.textContent=``,i.removeAttribute(`aria-invalid`)}),r.addEventListener(`submit`,e=>{e.preventDefault();let t=i.value.trim(),n=j(t)??j(t.toLowerCase());if(!n){a.textContent=t?`No card found for that ID.`:`Enter a card ID.`,i.setAttribute(`aria-invalid`,`true`),i.focus();return}window.location.href=`?`+new URLSearchParams({song:n.UniqueID})});let o=n.querySelector(`.deck-picker`),s=o.querySelector(`summary`),c=o.querySelector(`#deck-selection`),l=o.querySelectorAll(`[data-deck-id]`),u=n.querySelector(`#random-card`),d=n.querySelector(`#deck-status`),f=sessionStorage.getItem(`selected_deck`),p,m=[];function h(e){p=e,c.textContent=e.name;for(let t of l)t.setAttribute(`aria-pressed`,String(t.dataset.deckId===e.id));m=N(e,t),u.disabled=m.length===0,d.textContent=u.disabled?`This deck has no playable cards.`:``}u.addEventListener(`click`,()=>{u.disabled||P(p,m)});function g(){o.open=!1,s.focus()}for(let e of l)e.addEventListener(`click`,()=>{let t=k.find(t=>t.id===e.dataset.deckId);sessionStorage.setItem(`selected_deck`,t.id),h(t),g()});o.addEventListener(`keydown`,e=>{e.key===`Escape`&&o.open&&(e.preventDefault(),g())}),o.addEventListener(`focusout`,e=>{o.contains(e.relatedTarget)||(o.open=!1)}),h(k.find(e=>e.id===f)??k[0])}function R(e,t,n){e.innerHTML=`
     <div id="game-view" class="view-state">
