@@ -1,5 +1,6 @@
 import * as auth from './login/authenticate.js';
 import { getTrackById } from './tracks.js';
+import { getPlayableCardIds, openRandomCard, restoreRandomDeck } from './random-cards.js';
 
 import { renderUnauthenticatedView } from './views/unauthenticated.js';
 import { renderDashboardView } from './views/dashboard.js';
@@ -88,6 +89,8 @@ async function initApp() {
     return;
   }
 
+  const randomDeck = restoreRandomDeck(songId);
+
   // STATE 2: Active Card Player
   if (songId) {
     const trackData = getTrackById(songId);
@@ -97,7 +100,19 @@ async function initApp() {
     }
 
     currentTrackId = trackData[authState.provider];
-    renderPlayerView(cardMount, trackData);
+    const nextCards = randomDeck
+      ? getPlayableCardIds(randomDeck, authState.provider).filter(id => id !== songId)
+      : [];
+    renderPlayerView(cardMount, trackData, nextCards.length ? async () => {
+      if (trackStarted) {
+        try {
+          await auth.pauseTrack();
+        } catch (error) {
+          console.error('Could not pause the current card:', error);
+        }
+      }
+      openRandomCard(randomDeck, nextCards);
+    } : null);
 
     // Bind Player Controls
     const playBtn = document.getElementById('play-pause-btn');

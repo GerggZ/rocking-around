@@ -1,4 +1,4 @@
-export function renderPlayerView(container, trackData) {
+export function renderPlayerView(container, trackData, onNextRandomCard) {
   container.innerHTML = `
     <div id="game-view" class="view-state">
       <p id="status-msg" class="status-msg"></p>
@@ -34,8 +34,18 @@ export function renderPlayerView(container, trackData) {
   const externalSection = document.getElementById('external-content');
   if (externalSection) {
     externalSection.innerHTML = `
+      ${onNextRandomCard ? '<button id="next-random-card" class="action-btn" type="button">Next Random Card</button>' : ''}
       <button id="back-home-btn" class="outer-back-btn">← Back to Menu</button>
     `;
+    const nextButton = externalSection.querySelector('#next-random-card');
+    nextButton?.addEventListener('click', async () => {
+      nextButton.disabled = true;
+      try {
+        await onNextRandomCard();
+      } finally {
+        nextButton.disabled = false;
+      }
+    });
     document.getElementById('back-home-btn')?.addEventListener('click', () => {
       window.location.href = import.meta.env.BASE_URL;
     });

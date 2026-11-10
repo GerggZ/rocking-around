@@ -252,6 +252,7 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 0.65rem;
   margin-top: 1.5rem;
 }
 
@@ -269,44 +270,100 @@ p {
   color: var(--walnut-brown);
 }
 
-.section-title[for="deck-select"] {
-  display: block;
+.deck-picker {
+  position: relative;
+  width: min(100%, 18rem);
+  margin: 0 auto 0.75rem;
+  text-align: left;
 }
 
-#deck-select {
-  display: block;
-  width: min(100%, 18rem);
+.deck-picker summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
   min-height: 44px;
-  margin: 0 auto 0.75rem;
-  padding: 0.65rem 2.5rem 0.65rem 1rem;
+  padding: 0.65rem 1rem;
   color: var(--walnut-brown);
   font-size: 0.85rem;
   font-weight: 650;
-  appearance: none;
-  background: rgba(253, 251, 247, 0.95) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%236b4423' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") right 0.9rem center / 1rem no-repeat;
+  background: #fdfbf7;
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   cursor: pointer;
+  list-style: none;
 }
 
-#deck-select:hover {
+.deck-picker summary::-webkit-details-marker {
+  display: none;
+}
+
+.deck-picker summary::after {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.deck-picker[open] summary::after {
+  transform: rotate(225deg);
+}
+
+.deck-picker summary:hover,
+.deck-picker[open] summary {
   border-color: var(--leaf-green);
 }
 
-#deck-select:focus-visible {
+.deck-options {
+  position: absolute;
+  z-index: 3;
+  inset: calc(100% + 0.35rem) 0 auto;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  background: #fdfbf7;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 20px rgba(60, 42, 30, 0.14);
+}
+
+.deck-options button {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.55rem 0.7rem;
+  color: var(--walnut-brown);
+  font-size: 0.85rem;
+  font-weight: 650;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.deck-options button[aria-pressed="true"] {
+  color: var(--leaf-green);
+  background: var(--leaf-glow);
+  border-color: currentColor;
+}
+
+.deck-options button:hover {
+  color: var(--text-on-green);
+  background: var(--leaf-green);
+}
+
+.deck-picker summary:focus-visible,
+.deck-options button:focus-visible {
   outline: 2px solid var(--leaf-green);
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 
-@media (forced-colors: active) {
-  #deck-select {
-    appearance: auto;
-    background-image: none;
-  }
-}
-
-#random-card:disabled {
+#random-card:disabled,
+#next-random-card:disabled {
   opacity: 0.6;
   cursor: default;
   transform: none;

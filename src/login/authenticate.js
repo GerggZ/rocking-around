@@ -50,6 +50,12 @@ export async function playTrack(trackId) {
   }
 }
 
+export async function pauseTrack() {
+  if (activeProvider === 'spotify') {
+    await spotify.pauseTrack();
+  }
+}
+
 export async function togglePlay() {
   if (activeProvider === 'spotify') {
     await spotify.togglePlay();

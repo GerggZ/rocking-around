@@ -1,4 +1,5 @@
-import { decks, getTrackById } from '../tracks.js';
+import { decks } from '../tracks.js';
+import { getPlayableCardIds, openRandomCard } from '../random-cards.js';
 
 export function renderDashboardView(container, providerName) {
   // Render Card Content
@@ -16,39 +17,70 @@ export function renderDashboardView(container, providerName) {
 
   trackSection.innerHTML = `
     <div class="external-section">
-      <label class="section-title" for="deck-select">Select Deck</label>
-      <select id="deck-select">
-        ${decks.map(deck => `<option value="${deck.id}">${deck.name}</option>`).join('')}
-      </select>
+      <h3 id="deck-picker-title" class="section-title">Select Deck</h3>
+      <details class="deck-picker">
+        <summary aria-labelledby="deck-picker-title deck-selection">
+          <span id="deck-selection"></span>
+        </summary>
+        <ul class="deck-options" aria-labelledby="deck-picker-title">
+          ${decks.map(deck => `<li><button type="button" data-deck-id="${deck.id}">${deck.name}</button></li>`).join('')}
+        </ul>
+      </details>
       <button id="random-card" class="action-btn" type="button">Play Random Card</button>
       <p id="deck-status" role="status"></p>
     </div>
   `;
 
-  const select = trackSection.querySelector('#deck-select');
+  const picker = trackSection.querySelector('.deck-picker');
+  const summary = picker.querySelector('summary');
+  const selection = picker.querySelector('#deck-selection');
+  const options = picker.querySelectorAll('[data-deck-id]');
   const playButton = trackSection.querySelector('#random-card');
   const status = trackSection.querySelector('#deck-status');
   const savedDeck = sessionStorage.getItem('selected_deck');
-  select.value = decks.find(deck => deck.id === savedDeck)?.id ?? decks[0].id;
-
+  let selectedDeck;
   let playableIds = [];
-  function updateDeck() {
-    const { tracks } = decks.find(deck => deck.id === select.value);
-    const recordingIds = new Set(tracks.map(track => track.UniqueID));
-    playableIds = [...recordingIds].filter(id => getTrackById(id)?.[providerName]);
+
+  function updateDeck(deck) {
+    selectedDeck = deck;
+    selection.textContent = deck.name;
+    for (const option of options) {
+      option.setAttribute('aria-pressed', String(option.dataset.deckId === deck.id));
+    }
+
+    playableIds = getPlayableCardIds(deck, providerName);
     playButton.disabled = playableIds.length === 0;
     status.textContent = playButton.disabled ? 'This deck has no playable cards.' : '';
   }
 
   playButton.addEventListener('click', () => {
     if (playButton.disabled) return;
-    const id = playableIds[Math.floor(Math.random() * playableIds.length)];
-    window.location.href = `?song=${encodeURIComponent(id)}`;
+    openRandomCard(selectedDeck, playableIds);
   });
 
-  select.addEventListener('change', () => {
-    sessionStorage.setItem('selected_deck', select.value);
-    updateDeck();
+  function closePicker() {
+    picker.open = false;
+    summary.focus();
+  }
+
+  for (const option of options) {
+    option.addEventListener('click', () => {
+      const deck = decks.find(deck => deck.id === option.dataset.deckId);
+      sessionStorage.setItem('selected_deck', deck.id);
+      updateDeck(deck);
+      closePicker();
+    });
+  }
+
+  picker.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && picker.open) {
+      event.preventDefault();
+      closePicker();
+    }
   });
-  updateDeck();
+  picker.addEventListener('focusout', event => {
+    if (!picker.contains(event.relatedTarget)) picker.open = false;
+  });
+
+  updateDeck(decks.find(deck => deck.id === savedDeck) ?? decks[0]);
 }

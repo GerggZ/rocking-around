@@ -114,6 +114,10 @@ export async function playTrack(trackId) {
   });
 }
 
+export async function pauseTrack() {
+  await spotifyPlayer?.pause();
+}
+
 export async function togglePlay() {
   if (spotifyPlayer) {
     await spotifyPlayer.togglePlay();
