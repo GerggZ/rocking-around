@@ -6,7 +6,8 @@ export function renderDashboardView(container, providerName) {
   container.innerHTML = `
     <div id="dashboard-view" class="view-state">
       <h2>Rockin' Around</h2>
-      <p class="dashboard-hint">Ready to play</p>
+      <div class="status-badge authenticated">CONNECTED (${providerName.toUpperCase()})</div>
+      <p class="dashboard-hint">Choose a deck and draw a random card.</p>
     </div>
   `;
 
@@ -16,7 +17,17 @@ export function renderDashboardView(container, providerName) {
 
   trackSection.innerHTML = `
     <div class="external-section">
-      <h3 id="deck-picker-title" class="section-title">Choose a deck</h3>
+      <form class="card-lookup" id="card-lookup">
+        <label class="section-title" for="card-lookup-id">Card Code</label>
+        <div class="card-lookup-controls">
+          <input id="card-lookup-id" type="text"
+                 autocomplete="off" autocapitalize="none" spellcheck="false"
+                 aria-describedby="card-lookup-status">
+          <button class="action-btn" type="submit">Open Card</button>
+        </div>
+        <p id="card-lookup-status" role="status"></p>
+      </form>
+      <h3 id="deck-picker-title" class="section-title">Select Deck</h3>
       <details class="deck-picker">
         <summary aria-labelledby="deck-picker-title deck-selection">
           <span id="deck-selection"></span>
@@ -25,21 +36,8 @@ export function renderDashboardView(container, providerName) {
           ${decks.map(deck => `<li><button type="button" data-deck-id="${deck.id}">${deck.name}</button></li>`).join('')}
         </ul>
       </details>
-      <button id="random-card" class="action-btn" type="button">Draw a card</button>
+      <button id="random-card" class="action-btn" type="button">Play Random Card</button>
       <p id="deck-status" role="status"></p>
-      <details class="card-lookup">
-        <summary>Enter a card code</summary>
-        <form id="card-lookup">
-          <label class="section-title" for="card-lookup-id">Card Code</label>
-          <div class="card-lookup-controls">
-            <input id="card-lookup-id" type="text"
-                   autocomplete="off" autocapitalize="none" spellcheck="false"
-                   aria-describedby="card-lookup-status">
-            <button class="action-btn" type="submit">Open Card</button>
-          </div>
-          <p id="card-lookup-status" role="status"></p>
-        </form>
-      </details>
     </div>
   `;
 

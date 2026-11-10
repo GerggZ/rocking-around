@@ -58,12 +58,10 @@ function handlePlayerStateChange(state) {
   if (playBtn) {
     if (isPlaying) {
       playBtn.textContent = '❚❚';
-      playBtn.setAttribute('aria-label', 'Pause');
       playBtn.style.paddingLeft = '0px';
       startProgressLoop();
     } else {
       playBtn.textContent = '▶';
-      playBtn.setAttribute('aria-label', 'Play');
       playBtn.style.paddingLeft = '3px';
       stopProgressLoop();
       updateProgressRing(state.position, state.duration);
@@ -132,8 +130,7 @@ async function initApp() {
 
     revealBtn?.addEventListener('click', () => {
       const isHidden = answerBox.classList.toggle('hidden');
-      revealBtn.setAttribute('aria-expanded', String(!isHidden));
-      revealBtn.textContent = isHidden ? 'Reveal the year' : 'Hide the answer';
+      revealBtn.textContent = isHidden ? 'Reveal Track Info' : 'Hide Track Info';
     });
 
     if (!currentTrackId) {

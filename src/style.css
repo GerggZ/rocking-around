@@ -54,7 +54,7 @@ body {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -63,8 +63,8 @@ body {
 /* --- FIXED-PROPORTION CARD BOARD --- */
 .card-board {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1;
+  width: 420px;
+  height: 500px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,8 +85,8 @@ body {
 .card-content {
   position: relative;
   z-index: 2;
-  width: min(68%, 280px);
-  height: 83%;
+  width: 260px;
+  height: 380px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -127,7 +127,8 @@ p {
 
 /* --- STATE 3: GAME VIEW SPACING FIX --- */
 #game-view {
-  justify-content: center;
+  justify-content: flex-start; /* Stack top-down cleanly */
+  padding-top: 2rem;
 }
 
 /* Player Ring */
@@ -135,8 +136,7 @@ p {
   position: relative;
   width: 100px;
   height: 100px;
-  flex-shrink: 0;
-  margin: 0.5rem 0 0.4rem;
+  margin: 0.5rem 0 0.4rem 0;
   display: grid;
   place-items: center;
 }
@@ -197,10 +197,10 @@ p {
 .answer-card {
   width: 100%;
   padding: 0.65rem 0.85rem;
-  text-align: center;
-  overflow-wrap: anywhere;
-  background: #fdfbf7;
+  text-align: left;
+  background: var(--surface-inset);
   border: 1px solid var(--border);
+  border-left: 4px solid var(--amber-sun);
   border-radius: 0.6rem;
 }
 
@@ -216,10 +216,11 @@ p {
 }
 
 .year-badge {
-  margin-bottom: 0.25rem;
-  color: var(--walnut-brown);
-  font: 700 clamp(1.9rem, 8vw, 2.8rem)/1 Georgia, serif;
-  font-variant-numeric: lining-nums tabular-nums;
+  display: inline-block;
+  margin-top: 0.25rem;
+  color: var(--amber-sun);
+  font-size: 0.85rem;
+  font-weight: 750;
 }
 
 /* --- BUTTONS --- */
@@ -263,15 +264,17 @@ p {
 .section-title {
   margin: 0 0 0.75rem 0;
   font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
   font-weight: 800;
   color: var(--walnut-brown);
 }
 
 .card-lookup {
   width: min(100%, 18rem);
-  margin: 0.7rem auto 0;
-  padding-top: 0.7rem;
-  border-top: 1px solid var(--border);
+  margin: 0 auto 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .card-lookup label {
@@ -426,71 +429,30 @@ p {
   transform: translateY(-1px);
 }
 
-#login-view h1,
-#dashboard-view h2 {
-  margin: 0;
-  font: 700 clamp(1.8rem, 7.6vw, 2.9rem)/1 Georgia, serif;
-  letter-spacing: -0.05em;
+/* --- AUTH STATUS BADGE --- */
+.status-badge {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 999px;
 }
 
-#login-view p {
-  margin: 0.65rem 0 1rem;
-  font-size: 0.92rem;
+.status-badge.authenticated {
+  color: var(--leaf-green);
+  background: rgba(45, 106, 79, 0.12);
+  border: 1px solid rgba(45, 106, 79, 0.25);
 }
 
-#login-spotify-btn,
-#random-card {
-  min-height: 44px;
-  font-size: 0.91rem;
-}
-
-.action-btn:focus-visible,
-.outer-back-btn:focus-visible,
-.play-btn:focus-visible {
-  outline: 2px solid var(--leaf-green);
-  outline-offset: 3px;
-}
-
-.app-viewport:has(#dashboard-view) {
-  max-width: 370px;
-}
-
-.app-viewport:has(#dashboard-view) .card-board {
-  max-width: 300px;
-}
-
-.app-viewport:has(#dashboard-view) #external-content {
-  margin-top: -0.75rem;
-  position: relative;
-  z-index: 2;
-}
-
-#dashboard-view h2 {
-  font-size: clamp(1.5rem, 6.4vw, 2.1rem);
-}
-
-.dashboard-hint {
-  margin-top: 0.5rem;
-}
-
-.external-section {
-  padding: 1rem;
-  background: #fdfbf7;
-  border: 1px solid var(--border);
-  border-radius: 0.85rem;
-}
-
-#random-card {
-  max-width: 18rem;
-}
-
-.card-lookup > summary {
-  padding: 0.4rem;
+.status-badge.unauthenticated {
   color: var(--walnut-brown);
-  font-size: 0.85rem;
-  cursor: pointer;
+  background: rgba(107, 68, 35, 0.12);
+  border: 1px solid rgba(107, 68, 35, 0.25);
 }
 
-.card-lookup form {
-  padding-top: 0.4rem;
+@media (max-width: 450px) {
+  .app-viewport { transform: scale(0.92); }
 }
