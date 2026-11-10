@@ -628,14 +628,19 @@
     </div>
   `;let n=document.getElementById(`external-content`);if(!n)return;n.innerHTML=`
     <div class="external-section">
-      <label class="section-title" for="deck-select">Select Deck</label>
-      <select id="deck-select">
-        ${D.map(e=>`<option value="${e.id}">${e.name}</option>`).join(``)}
-      </select>
+      <h3 id="deck-picker-title" class="section-title">Select Deck</h3>
+      <details class="deck-picker">
+        <summary aria-labelledby="deck-picker-title deck-selection">
+          <span id="deck-selection"></span>
+        </summary>
+        <ul class="deck-options" aria-labelledby="deck-picker-title">
+          ${D.map(e=>`<li><button type="button" data-deck-id="${e.id}">${e.name}</button></li>`).join(``)}
+        </ul>
+      </details>
       <button id="random-card" class="action-btn" type="button">Play Random Card</button>
       <p id="deck-status" role="status"></p>
     </div>
-  `;let r=n.querySelector(`#deck-select`),i=n.querySelector(`#random-card`),a=n.querySelector(`#deck-status`),o=sessionStorage.getItem(`selected_deck`);r.value=D.find(e=>e.id===o)?.id??D[0].id;let s=[];function c(){let{tracks:e}=D.find(e=>e.id===r.value);s=[...new Set(e.map(e=>e.UniqueID))].filter(e=>k(e)?.[t]),i.disabled=s.length===0,a.textContent=i.disabled?`This deck has no playable cards.`:``}i.addEventListener(`click`,()=>{if(i.disabled)return;let e=s[Math.floor(Math.random()*s.length)];window.location.href=`?song=${encodeURIComponent(e)}`}),r.addEventListener(`change`,()=>{sessionStorage.setItem(`selected_deck`,r.value),c()}),c()}function M(e,t){e.innerHTML=`
+  `;let r=n.querySelector(`.deck-picker`),i=r.querySelector(`summary`),a=r.querySelector(`#deck-selection`),o=r.querySelectorAll(`[data-deck-id]`),s=n.querySelector(`#random-card`),c=n.querySelector(`#deck-status`),l=sessionStorage.getItem(`selected_deck`),u=[];function d(e){a.textContent=e.name;for(let t of o)t.setAttribute(`aria-pressed`,String(t.dataset.deckId===e.id));u=[...new Set(e.tracks.map(e=>e.UniqueID))].filter(e=>k(e)?.[t]),s.disabled=u.length===0,c.textContent=s.disabled?`This deck has no playable cards.`:``}s.addEventListener(`click`,()=>{if(s.disabled)return;let e=u[Math.floor(Math.random()*u.length)];window.location.href=`?song=${encodeURIComponent(e)}`});function f(){r.open=!1,i.focus()}for(let e of o)e.addEventListener(`click`,()=>{let t=D.find(t=>t.id===e.dataset.deckId);sessionStorage.setItem(`selected_deck`,t.id),d(t),f()});r.addEventListener(`keydown`,e=>{e.key===`Escape`&&r.open&&(e.preventDefault(),f())}),r.addEventListener(`focusout`,e=>{r.contains(e.relatedTarget)||(r.open=!1)}),d(D.find(e=>e.id===l)??D[0])}function M(e,t){e.innerHTML=`
     <div id="game-view" class="view-state">
       <p id="status-msg" class="status-msg"></p>
 
