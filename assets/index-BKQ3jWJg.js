@@ -624,7 +624,7 @@
     <div id="dashboard-view" class="view-state">
       <h2>Rockin' Around</h2>
       <div class="status-badge authenticated">CONNECTED (${t.toUpperCase()})</div>
-      <p class="dashboard-hint">Pick a card below to launch a track!</p>
+      <p class="dashboard-hint">Choose a deck and draw a random card.</p>
     </div>
   `;let n=document.getElementById(`external-content`);if(!n)return;n.innerHTML=`
     <div class="external-section">
@@ -632,10 +632,10 @@
       <select id="deck-select">
         ${D.map(e=>`<option value="${e.id}">${e.name}</option>`).join(``)}
       </select>
-      <h3 class="section-title">Select Card</h3>
-      <div class="track-grid"></div>
+      <button id="random-card" class="action-btn" type="button">Play Random Card</button>
+      <p id="deck-status" role="status"></p>
     </div>
-  `;let r=n.querySelector(`#deck-select`),i=n.querySelector(`.track-grid`),a=sessionStorage.getItem(`selected_deck`);r.value=D.find(e=>e.id===a)?.id??D[0].id;function o(){let{tracks:e}=D.find(e=>e.id===r.value);i.replaceChildren(...e.map(e=>{let t=document.createElement(`a`);return t.href=`?song=${encodeURIComponent(e.UniqueID)}`,t.className=`track-link`,t.textContent=`Card #${e.id.padStart(2,`0`)}`,t}))}r.addEventListener(`change`,()=>{sessionStorage.setItem(`selected_deck`,r.value),o()}),o()}function M(e,t){e.innerHTML=`
+  `;let r=n.querySelector(`#deck-select`),i=n.querySelector(`#random-card`),a=n.querySelector(`#deck-status`),o=sessionStorage.getItem(`selected_deck`);r.value=D.find(e=>e.id===o)?.id??D[0].id;let s=[];function c(){let{tracks:e}=D.find(e=>e.id===r.value);s=[...new Set(e.map(e=>e.UniqueID))].filter(e=>k(e)?.[t]),i.disabled=s.length===0,a.textContent=i.disabled?`This deck has no playable cards.`:``}i.addEventListener(`click`,()=>{if(i.disabled)return;let e=s[Math.floor(Math.random()*s.length)];window.location.href=`?song=${encodeURIComponent(e)}`}),r.addEventListener(`change`,()=>{sessionStorage.setItem(`selected_deck`,r.value),c()}),c()}function M(e,t){e.innerHTML=`
     <div id="game-view" class="view-state">
       <p id="status-msg" class="status-msg"></p>
 
