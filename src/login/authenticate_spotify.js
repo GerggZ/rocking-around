@@ -74,6 +74,12 @@ function clearSession() {
   sessionStorage.removeItem('spotify_token_expires_at');
 }
 
+export function logout() {
+  clearSession();
+  sessionStorage.removeItem('spotify_code_verifier');
+  spotifyPlayer?.disconnect();
+}
+
 function returnToSignIn() {
   clearSession();
   spotifyPlayer?.disconnect();

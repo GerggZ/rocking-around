@@ -27,8 +27,12 @@ const recordings = new Map();
 for (const { tracks } of decks) {
   for (const track of tracks) {
     const existing = recordings.get(track.UniqueID);
-    if (!existing || (!existing.spotify && track.spotify)) {
-      recordings.set(track.UniqueID, track);
+    if (!existing) {
+      recordings.set(track.UniqueID, { ...track });
+    } else {
+      for (const provider of ['spotify', 'tidal', 'apple', 'youtube']) {
+        if (!existing[provider] && track[provider]) existing[provider] = track[provider];
+      }
     }
   }
 }

@@ -1,101 +1,101 @@
-id,title,artist,album,year,spotify,apple,youtube,UniqueID
-1,"Hound Dog","Elvis Presley","Elvis: 30 #1 Hits",1956,,,,ec157a6b390b
-2,"Yakety Yak","The Coasters","Rhino Hi-Five: The Coasters",1958,7demHL0GXA6YmTNqw3Btz8,,,719a9de727ef
-3,"Jump in the Line","Harry Belafonte","The Best Of",1961,70mAceS5ArAqVj2OwDE4db,,,2ce5a04d9bbe
-4,"Twist And Shout - Remastered 2009","The Beatles","Please Please Me",1963,5ZBeML7Lf3FMEVviTyvi8l,,,53fc7ae8b802
-5,"You Really Got Me","The Kinks","",1964,,,,59b26ad6979a
-6,"My Girl","The Temptations","",1964,,,,e3cc5add46a6
-7,"Help! - Remastered 2015","The Beatles","1",1965,3Smida2eCUsLzDcmZqXEZ3,,,f18dfeca441e
-8,"(I Can't Get No) Satisfaction - Mono","The Rolling Stones","Out Of Our Heads",1965,2PzU4IB8Dr6mxV3lHuaG34,,,2285fde4fec1
-9,"Good Vibrations","The Beach Boys","Made In U.S.A.",1966,,,,a021518de537
-10,"Yellow Submarine - Remastered 2015","The Beatles","1",1966,7zRmGvtSy36Jr19U5OInJT,,,1585d182a8f8
-11,"Paint It Black","The Rolling Stones","Through the Past, Darkly (Big Hits, Vol. 2)",1966,,,,35854f0368e7
-12,"Ain't No Mountain High Enough","Marvin Gaye","",1967,,,,6bb15a637076
-13,"Brown Eyed Girl","Van Morrison","",1967,3yrSvpt2l1xhsV9Em88Pul,,,29f9d83309bb
-14,"Hey Jude - Remastered 2015","The Beatles","1",1968,3H7sv3Krffn15BufUuXzf3,,,f9ddec7d980a
-15,"Here Comes The Sun - Remastered 2009","The Beatles","Abbey Road",1969,6dGnYIeXmHdcikdzNNDMm2,,,bbb9138e9053
-16,"Have You Ever Seen The Rain","Creedence Clearwater Revival","Pendulum",1970,2LawezPeJhN4AWuSB0GtAU,,,81c306a821e4
-17,"In the Summertime","Mungo Jerry","In the Summertime",1970,3RNyGLgSvmVRZ7xKUp8Wgd,,,2b1297eec081
-18,"Rocket Man (I Think It's Going To Be A Long, Long Time)","Elton John","Honky Chateau",1972,3gdewACMIVMEWVbyb8O9sY,,,21df3190ed67
-19,"Superstition","Stevie Wonder","",1972,,,,2fa68cb8ab02
-20,"Hooked On A Feeling","Blue Swede","Hooked On A Feeling",1973,6Ac4NVYYl2U73QiTt11ZKd,,,7109dec96c6e
-21,"Money","Pink Floyd","Dark Side Of The Moon",1973,,,,ce92a32bcd1d
-22,"Mamma Mia","ABBA","Abba",1975,2TxCwUlqaOH3TIyJqGgR91,,,51606785a376
-23,"Bohemian Rhapsody - Remastered 2011","Queen","",1975,2GAIycsMaDVtMtdvxzR2xI,,,0408b8a72999
-24,"Play That Funky Music","Wild Cherry","'70s Greatest Hits",1976,,,,c4b8c1201ca1
-25,"Stayin' Alive","Bee Gees","",1977,,,,9c3c3ded57da
-26,"Mr. Blue Sky","Electric Light Orchestra","Out Of The Blue",1977,74z2lfZ7fj3IqoK71lHkZw,,,a31eaca050ee
-27,"We Will Rock You","Queen","",1977,4fVn54cP0hasdSHuJthQj1,,,6e0bd3cbb805
-28,"September","Earth, Wind & Fire","Earth, Wind & Fire: Greatest Hits",1978,,,,482ac15ec794
-29,"I Will Survive","Gloria Gaynor","",1978,,,,7852e9f24b6c
-30,"Don't Stop Me Now - Remastered 2011","Queen","Jazz",1978,7hQJA50XrCWABAu5v6QZ4i,,,51bae400cccb
-31,"You Make My Dreams (Come True)","Daryl Hall & John Oates","The Very Best of Daryl Hall / John Oates",1980,7HX9f8AMBl0vQxAoAzLqhS,,,b329c6c49478
-32,"9 to 5","Dolly Parton","9 To 5 And Odd Jobs",1980,4w3tQBXhn5345eUXDGBWZG,,,00642d1ef9c3
-33,"Another One Bites The Dust","Queen","",1980,291RmMazWAmDitFuD6NJCv,,,8af8227d093c
-34,"Don't Stop Believin'","Journey","",1981,77NNZQSqzLNqh2A9JhLRkg,,,88abb1c95365
-35,"Maneater","Daryl Hall & John Oates","",1982,,,,64349187e8c6
-36,"Major Tom (Völlig Losgelöst)","Peter Schilling","Major Tom [Voellig Losgeloest]",1982,2qZQtey4lTwvvABVMrO4h8,,,e93519ace455
-37,"It's Raining Men","The Weather Girls","Success",1982,2IvetNzSZMH5gwjInoyr18,,,fa72ff20b0bb
-38,"Sweet Dreams (Are Made of This) - 2005 Remaster","Eurythmics","Sweet Dreams (Are Made Of This)",1983,1TfqLAPs4K3s2rJMoCokcS,,,aecb33508f6e
-39,"99 Luftballons","Nena","",1983,2IJftBfq7pJ43tfnOR0RB3,,,eb2d1c3c4c84
-40,"Dancing In The Dark","Bruce Springsteen","The Essential Bruce Springsteen [Disc 2]",1984,,,,de24d7edc91d
-41,"Material Girl","Madonna","",1984,,,,22de6d0466ba
-42,"Take on Me","a-ha","Hunting High and Low",1985,2WfaOiMkCvy7F5fcp2zZ8L,,,20ba7a88df33
-43,"Don't You (Forget About Me) - Remastered","Simple Minds","Celebrate",1985,0A4PZuepTcIQVvA5m7R0M1,,,1d2bbf334f3a
-44,"Livin' on a Prayer","Bon Jovi","Cross Road",1986,,,,966776dcca66
-45,"You Give Love A Bad Name","Bon Jovi","Slippery When Wet",1986,4jlp53Zc5Aq2DQFmu41nvE,,,2ff98eea0f56
-46,"La Bamba","Los Lobos","La Bamba / Charlena",1987,0uMMLry3hzWGn3q3loqMkm,,,bdb7f4d7fa6f
-47,"I Think We're Alone Now","Tiffany","Tiffany",1987,4uvjOKsp7mSjrDhWdkLPBY,,,d4e1af18adbc
-48,"With Or Without You","U2","",1987,,,,54ef6c388afd
-49,"I'm Gonna Be (500 Miles)","The Proclaimers","",1988,66S14BkJDxgkYxLl5DCqOz,,,9238d6d4adb1
-50,"We Didn't Start the Fire","Billy Joel","",1989,,,,68d3579636a4
-51,"Groove Is in the Heart","Deee-Lite","",1990,,,,25aee9c89d03
-52,"Smells Like Teen Spirit","Nirvana","Nirvana",1991,,,,b3cf41008fb8
-53,"Two Princes","Spin Doctors","Pocket Full Of Kryptonite",1991,4ePP9So5xRzspjLFVVbj90,,,e1979c422a60
-54,"One","U2","",1991,,,,3859353af24a
-55,"What's Up?","4 Non Blondes","Bigger, Better, Faster, More !",1992,0jWgAnTrNZmOGmqgvHhZEm,,,bc366dd1caa8
-56,"No Rain","Blind Melon","Blind Melon",1992,6txWz9UapYHVxEd7dDIHXT,,,e536be30fc37
-57,"Creep","Radiohead","Pablo Honey",1992,6b2oQwSGFkzsMtQruIWm2p,,,f076d1b420cb
-58,"I Will Always Love You","Whitney Houston","",1992,,,,7e41e690e01c
-59,"Mr. Jones","Counting Crows","August And Everything After",1993,5DiXcVovI0FcY2s0icWWUu,,,798bc90f4a82
-60,"Zombie","The Cranberries","",1994,,,,8e17b89be979
-61,"Gangsta's Paradise","Coolio","",1995,,,,f218233916ab
-62,"Wonderwall","Oasis","Stop The Clocks",1995,4w7RuuQAVP0JXlAom3z1aC,,,8e43b6053a16
-63,"Santeria","Sublime","Sublime",1996,6cJqlSO19vsfCsH1FeFI35,,,46675a8474b1
-64,"Save Tonight","Eagle-Eye Cherry","Desireless",1997,1t2Hq2WIBcZINOEnK6mdJG,,,c64ff607e8d1
-65,"Bitter Sweet Symphony","The Verve","This Is Music: The Singles 92-98",1997,1WYEDcS7WGjv0rG7rmMX3o,,,fa709635a955
-66,"Closing Time","Semisonic","Feeling Strangely Fine",1998,087OBLtoeS3Q6j0k6tMNAI,,,a48a2bfc0f7c
-67,"All The Small Things","blink-182","Enema Of The State",1999,2m1hi0nfMR9vdGC8UcrnwU,,,046f461ba872
-68,"Mambo No. 5 (a Little Bit of...)","Lou Bega","",1999,,,,94247bbd2e18
-69,"Scar Tissue","Red Hot Chili Peppers","Californication",1999,1G391cbiT3v3Cywg8T7DM1,,,6bc7fba9869a
-70,"All Star","Smash Mouth","",1999,2P1ZqQq8rQtmV7BLZ0Junn,,,1a3c9fe5acd1
-71,"One More Time","Daft Punk","",2000,,,,950c81e13505
-72,"Island In The Sun","Weezer","Weezer",2001,2MLHyLy5z5l5YRp7momlgw,,,1e711dc0c588
-73,"This Love","Maroon 5","Songs About Jane: 10th Anniversary Edition",2002,55vBk4ODkxRVSaHbKxWBn6,,,666bbd65556c
-74,"Stacy's Mom","Fountains Of Wayne","Welcome Interstate Managers",2003,27L8sESb3KR79asDUBu8nW,,,a08eae93f89e
-75,"Hey Ya!","Outkast","The Way You Move / Hey Ya!",2003,3AszgPDZd9q0DpDFt4HFBy,,,b5f15a52071e
-76,"Mr. Brightside","The Killers","Hot Fuss",2003,7oK9VyNzrYvRFo7nQEYkWN,,,23bf925e8631
-77,"Seven Nation Army","The White Stripes","Elephant",2003,3m6KkYKdnbffMpGd9Pm9FP,,,5be4a4c8d506
-78,"Take Me Out","Franz Ferdinand","Franz Ferdinand",2004,6ooluO7DiEhI1zmK94nRCM,,,c4c134ad33be
-79,"Feel Good Inc.","Gorillaz","Demon Days",2005,0d28khcov6AiegSCpG5TuT,,,63fbd18c4597
-80,"Crazy","Gnarls Barkley","St. Elsewhere",2006,1vxw6aYJls2oq3gW0DujAo,,,08a3311b3f5e
-81,"Hips Don't Lie (feat. Wyclef Jean)","Shakira","Oral Fixation, Vol. 2 (Expanded Edition)",2006,3ZFTkvIE7kyPt6Nu3PEa7V,,,57998f39ad24
-82,"Grace Kelly","MIKA","Life In Cartoon Motion",2007,2SDx0PooHZI1SQKR0y44bs,,,b039e96b1d1b
-83,"Viva La Vida","Coldplay","",2008,3Fcfwhm8oRrBvBZ8KGhtea,,,0e3aba851b76
-84,"Poker Face","Lady Gaga","",2008,,,,f5214dc31395
-85,"Fireflies","Owl City","Ocean Eyes",2009,3DamFFqW32WihKkTVlwTYQ,,,df8f56b2f3c7
-86,"Pumped Up Kicks","Foster The People","Torches",2010,1G5RlnmO3GzNdKCDNSgT5W,,,d33221c20cfa
-87,"Somebody That I Used to Know (feat. Kimbra)","Gotye","",2011,,,,3b1c0d8765d9
-88,"Radioactive","Imagine Dragons","Night Visions",2012,7eGNiGg6SE27VkSrpZMVTD,,,d8044371dc28
-89,"Get Lucky (Radio Edit) [feat. Pharrell Williams and Nile Rodgers]","Daft Punk","Get Lucky (Radio Edit) [feat. Pharrell Williams and Nile Rodgers]",2013,2Foc5Q5nqNiosCNqttzHof,,,6c5d469fb8be
-90,"Uptown Funk (feat. Bruno Mars)","Mark Ronson","Uptown Special",2014,32OlwWuMpZ6b0aN2RZOeMS,,,c02d669b43ac
-91,"Hello","Adele","Hello",2015,0ENSn4fwAbCGeFGVUbXEU3,,,fa9734f238e3
-92,"Can't Stop the Feeling!","Justin Timberlake","",2016,,,,bc2b862b80e9
-93,"Shape of You","Ed Sheeran","÷",2017,7qiZfU4dY1lWllzX7mPBI3,,,b97a71e2ec0a
-94,"Shotgun","George Ezra","Staying at Tamara's",2018,4ofwffwvvnbSkrMSCKQDaC,,,b7d1a82f55df
-95,"Blinding Lights","The Weeknd","",2019,,,,23bfdab9e20b
-96,"Heat Waves","Glass Animals","Dreamland",2020,02MWAaffLxlfxAUY7c5dvx,,,35cb096eda5d
-97,"good 4 u","Olivia Rodrigo","SOUR",2021,4ZtFanR9U6ndgddUvNcjcG,,,e58c74b24e75
-98,"As It Was","Harry Styles","",2022,,,,a0d0ffd35fb6
-99,"Flowers","Miley Cyrus","Endless Summer Vacation",2023,7DSAEUvxU8FajXtRloy8M0,,,2d0465a2cf31
-100,"TEXAS HOLD 'EM","Beyoncé","TEXAS HOLD 'EM",2024,7AYmToZ5y67fBjq4RLFbuq,,,c8de22be7a9d
+id,title,artist,album,year,spotify,tidal,apple,youtube,UniqueID
+1,"Hound Dog","Elvis Presley","Elvis: 30 #1 Hits",1956,,,,,ec157a6b390b
+2,"Yakety Yak","The Coasters","Rhino Hi-Five: The Coasters",1958,7demHL0GXA6YmTNqw3Btz8,,,,719a9de727ef
+3,"Jump in the Line","Harry Belafonte","The Best Of",1961,70mAceS5ArAqVj2OwDE4db,,,,2ce5a04d9bbe
+4,"Twist And Shout - Remastered 2009","The Beatles","Please Please Me",1963,5ZBeML7Lf3FMEVviTyvi8l,,,,53fc7ae8b802
+5,"You Really Got Me","The Kinks","",1964,,,,,59b26ad6979a
+6,"My Girl","The Temptations","",1964,,,,,e3cc5add46a6
+7,"Help! - Remastered 2015","The Beatles","1",1965,3Smida2eCUsLzDcmZqXEZ3,,,,f18dfeca441e
+8,"(I Can't Get No) Satisfaction - Mono","The Rolling Stones","Out Of Our Heads",1965,2PzU4IB8Dr6mxV3lHuaG34,,,,2285fde4fec1
+9,"Good Vibrations","The Beach Boys","Made In U.S.A.",1966,,,,,a021518de537
+10,"Yellow Submarine - Remastered 2015","The Beatles","1",1966,7zRmGvtSy36Jr19U5OInJT,,,,1585d182a8f8
+11,"Paint It Black","The Rolling Stones","Through the Past, Darkly (Big Hits, Vol. 2)",1966,,,,,35854f0368e7
+12,"Ain't No Mountain High Enough","Marvin Gaye","",1967,,,,,6bb15a637076
+13,"Brown Eyed Girl","Van Morrison","",1967,3yrSvpt2l1xhsV9Em88Pul,,,,29f9d83309bb
+14,"Hey Jude - Remastered 2015","The Beatles","1",1968,3H7sv3Krffn15BufUuXzf3,,,,f9ddec7d980a
+15,"Here Comes The Sun - Remastered 2009","The Beatles","Abbey Road",1969,6dGnYIeXmHdcikdzNNDMm2,,,,bbb9138e9053
+16,"Have You Ever Seen The Rain","Creedence Clearwater Revival","Pendulum",1970,2LawezPeJhN4AWuSB0GtAU,,,,81c306a821e4
+17,"In the Summertime","Mungo Jerry","In the Summertime",1970,3RNyGLgSvmVRZ7xKUp8Wgd,,,,2b1297eec081
+18,"Rocket Man (I Think It's Going To Be A Long, Long Time)","Elton John","Honky Chateau",1972,3gdewACMIVMEWVbyb8O9sY,,,,21df3190ed67
+19,"Superstition","Stevie Wonder","",1972,,,,,2fa68cb8ab02
+20,"Hooked On A Feeling","Blue Swede","Hooked On A Feeling",1973,6Ac4NVYYl2U73QiTt11ZKd,,,,7109dec96c6e
+21,"Money","Pink Floyd","Dark Side Of The Moon",1973,,,,,ce92a32bcd1d
+22,"Mamma Mia","ABBA","Abba",1975,2TxCwUlqaOH3TIyJqGgR91,,,,51606785a376
+23,"Bohemian Rhapsody - Remastered 2011","Queen","",1975,2GAIycsMaDVtMtdvxzR2xI,,,,0408b8a72999
+24,"Play That Funky Music","Wild Cherry","'70s Greatest Hits",1976,,,,,c4b8c1201ca1
+25,"Stayin' Alive","Bee Gees","",1977,,,,,9c3c3ded57da
+26,"Mr. Blue Sky","Electric Light Orchestra","Out Of The Blue",1977,74z2lfZ7fj3IqoK71lHkZw,,,,a31eaca050ee
+27,"We Will Rock You","Queen","",1977,4fVn54cP0hasdSHuJthQj1,,,,6e0bd3cbb805
+28,"September","Earth, Wind & Fire","Earth, Wind & Fire: Greatest Hits",1978,,,,,482ac15ec794
+29,"I Will Survive","Gloria Gaynor","",1978,,,,,7852e9f24b6c
+30,"Don't Stop Me Now - Remastered 2011","Queen","Jazz",1978,7hQJA50XrCWABAu5v6QZ4i,,,,51bae400cccb
+31,"You Make My Dreams (Come True)","Daryl Hall & John Oates","The Very Best of Daryl Hall / John Oates",1980,7HX9f8AMBl0vQxAoAzLqhS,,,,b329c6c49478
+32,"9 to 5","Dolly Parton","9 To 5 And Odd Jobs",1980,4w3tQBXhn5345eUXDGBWZG,,,,00642d1ef9c3
+33,"Another One Bites The Dust","Queen","",1980,291RmMazWAmDitFuD6NJCv,,,,8af8227d093c
+34,"Don't Stop Believin'","Journey","",1981,77NNZQSqzLNqh2A9JhLRkg,,,,88abb1c95365
+35,"Maneater","Daryl Hall & John Oates","",1982,,,,,64349187e8c6
+36,"Major Tom (Völlig Losgelöst)","Peter Schilling","Major Tom [Voellig Losgeloest]",1982,2qZQtey4lTwvvABVMrO4h8,,,,e93519ace455
+37,"It's Raining Men","The Weather Girls","Success",1982,2IvetNzSZMH5gwjInoyr18,,,,fa72ff20b0bb
+38,"Sweet Dreams (Are Made of This) - 2005 Remaster","Eurythmics","Sweet Dreams (Are Made Of This)",1983,1TfqLAPs4K3s2rJMoCokcS,,,,aecb33508f6e
+39,"99 Luftballons","Nena","",1983,2IJftBfq7pJ43tfnOR0RB3,,,,eb2d1c3c4c84
+40,"Dancing In The Dark","Bruce Springsteen","The Essential Bruce Springsteen [Disc 2]",1984,,,,,de24d7edc91d
+41,"Material Girl","Madonna","",1984,,,,,22de6d0466ba
+42,"Take on Me","a-ha","Hunting High and Low",1985,2WfaOiMkCvy7F5fcp2zZ8L,,,,20ba7a88df33
+43,"Don't You (Forget About Me) - Remastered","Simple Minds","Celebrate",1985,0A4PZuepTcIQVvA5m7R0M1,,,,1d2bbf334f3a
+44,"Livin' on a Prayer","Bon Jovi","Cross Road",1986,,,,,966776dcca66
+45,"You Give Love A Bad Name","Bon Jovi","Slippery When Wet",1986,4jlp53Zc5Aq2DQFmu41nvE,,,,2ff98eea0f56
+46,"La Bamba","Los Lobos","La Bamba / Charlena",1987,0uMMLry3hzWGn3q3loqMkm,,,,bdb7f4d7fa6f
+47,"I Think We're Alone Now","Tiffany","Tiffany",1987,4uvjOKsp7mSjrDhWdkLPBY,,,,d4e1af18adbc
+48,"With Or Without You","U2","",1987,,,,,54ef6c388afd
+49,"I'm Gonna Be (500 Miles)","The Proclaimers","",1988,66S14BkJDxgkYxLl5DCqOz,,,,9238d6d4adb1
+50,"We Didn't Start the Fire","Billy Joel","",1989,,,,,68d3579636a4
+51,"Groove Is in the Heart","Deee-Lite","",1990,,,,,25aee9c89d03
+52,"Smells Like Teen Spirit","Nirvana","Nirvana",1991,,,,,b3cf41008fb8
+53,"Two Princes","Spin Doctors","Pocket Full Of Kryptonite",1991,4ePP9So5xRzspjLFVVbj90,,,,e1979c422a60
+54,"One","U2","",1991,,,,,3859353af24a
+55,"What's Up?","4 Non Blondes","Bigger, Better, Faster, More !",1992,0jWgAnTrNZmOGmqgvHhZEm,,,,bc366dd1caa8
+56,"No Rain","Blind Melon","Blind Melon",1992,6txWz9UapYHVxEd7dDIHXT,,,,e536be30fc37
+57,"Creep","Radiohead","Pablo Honey",1992,6b2oQwSGFkzsMtQruIWm2p,,,,f076d1b420cb
+58,"I Will Always Love You","Whitney Houston","",1992,,,,,7e41e690e01c
+59,"Mr. Jones","Counting Crows","August And Everything After",1993,5DiXcVovI0FcY2s0icWWUu,,,,798bc90f4a82
+60,"Zombie","The Cranberries","",1994,,,,,8e17b89be979
+61,"Gangsta's Paradise","Coolio","",1995,,,,,f218233916ab
+62,"Wonderwall","Oasis","Stop The Clocks",1995,4w7RuuQAVP0JXlAom3z1aC,,,,8e43b6053a16
+63,"Santeria","Sublime","Sublime",1996,6cJqlSO19vsfCsH1FeFI35,,,,46675a8474b1
+64,"Save Tonight","Eagle-Eye Cherry","Desireless",1997,1t2Hq2WIBcZINOEnK6mdJG,,,,c64ff607e8d1
+65,"Bitter Sweet Symphony","The Verve","This Is Music: The Singles 92-98",1997,1WYEDcS7WGjv0rG7rmMX3o,,,,fa709635a955
+66,"Closing Time","Semisonic","Feeling Strangely Fine",1998,087OBLtoeS3Q6j0k6tMNAI,,,,a48a2bfc0f7c
+67,"All The Small Things","blink-182","Enema Of The State",1999,2m1hi0nfMR9vdGC8UcrnwU,,,,046f461ba872
+68,"Mambo No. 5 (a Little Bit of...)","Lou Bega","",1999,,,,,94247bbd2e18
+69,"Scar Tissue","Red Hot Chili Peppers","Californication",1999,1G391cbiT3v3Cywg8T7DM1,,,,6bc7fba9869a
+70,"All Star","Smash Mouth","",1999,2P1ZqQq8rQtmV7BLZ0Junn,,,,1a3c9fe5acd1
+71,"One More Time","Daft Punk","",2000,,,,,950c81e13505
+72,"Island In The Sun","Weezer","Weezer",2001,2MLHyLy5z5l5YRp7momlgw,,,,1e711dc0c588
+73,"This Love","Maroon 5","Songs About Jane: 10th Anniversary Edition",2002,55vBk4ODkxRVSaHbKxWBn6,,,,666bbd65556c
+74,"Stacy's Mom","Fountains Of Wayne","Welcome Interstate Managers",2003,27L8sESb3KR79asDUBu8nW,,,,a08eae93f89e
+75,"Hey Ya!","Outkast","The Way You Move / Hey Ya!",2003,3AszgPDZd9q0DpDFt4HFBy,,,,b5f15a52071e
+76,"Mr. Brightside","The Killers","Hot Fuss",2003,7oK9VyNzrYvRFo7nQEYkWN,,,,23bf925e8631
+77,"Seven Nation Army","The White Stripes","Elephant",2003,3m6KkYKdnbffMpGd9Pm9FP,,,,5be4a4c8d506
+78,"Take Me Out","Franz Ferdinand","Franz Ferdinand",2004,6ooluO7DiEhI1zmK94nRCM,,,,c4c134ad33be
+79,"Feel Good Inc.","Gorillaz","Demon Days",2005,0d28khcov6AiegSCpG5TuT,,,,63fbd18c4597
+80,"Crazy","Gnarls Barkley","St. Elsewhere",2006,1vxw6aYJls2oq3gW0DujAo,,,,08a3311b3f5e
+81,"Hips Don't Lie (feat. Wyclef Jean)","Shakira","Oral Fixation, Vol. 2 (Expanded Edition)",2006,3ZFTkvIE7kyPt6Nu3PEa7V,,,,57998f39ad24
+82,"Grace Kelly","MIKA","Life In Cartoon Motion",2007,2SDx0PooHZI1SQKR0y44bs,,,,b039e96b1d1b
+83,"Viva La Vida","Coldplay","",2008,3Fcfwhm8oRrBvBZ8KGhtea,,,,0e3aba851b76
+84,"Poker Face","Lady Gaga","",2008,,,,,f5214dc31395
+85,"Fireflies","Owl City","Ocean Eyes",2009,3DamFFqW32WihKkTVlwTYQ,,,,df8f56b2f3c7
+86,"Pumped Up Kicks","Foster The People","Torches",2010,1G5RlnmO3GzNdKCDNSgT5W,,,,d33221c20cfa
+87,"Somebody That I Used to Know (feat. Kimbra)","Gotye","",2011,,,,,3b1c0d8765d9
+88,"Radioactive","Imagine Dragons","Night Visions",2012,7eGNiGg6SE27VkSrpZMVTD,,,,d8044371dc28
+89,"Get Lucky (Radio Edit) [feat. Pharrell Williams and Nile Rodgers]","Daft Punk","Get Lucky (Radio Edit) [feat. Pharrell Williams and Nile Rodgers]",2013,2Foc5Q5nqNiosCNqttzHof,,,,6c5d469fb8be
+90,"Uptown Funk (feat. Bruno Mars)","Mark Ronson","Uptown Special",2014,32OlwWuMpZ6b0aN2RZOeMS,,,,c02d669b43ac
+91,"Hello","Adele","Hello",2015,0ENSn4fwAbCGeFGVUbXEU3,,,,fa9734f238e3
+92,"Can't Stop the Feeling!","Justin Timberlake","",2016,,,,,bc2b862b80e9
+93,"Shape of You","Ed Sheeran","÷",2017,7qiZfU4dY1lWllzX7mPBI3,,,,b97a71e2ec0a
+94,"Shotgun","George Ezra","Staying at Tamara's",2018,4ofwffwvvnbSkrMSCKQDaC,,,,b7d1a82f55df
+95,"Blinding Lights","The Weeknd","",2019,,,,,23bfdab9e20b
+96,"Heat Waves","Glass Animals","Dreamland",2020,02MWAaffLxlfxAUY7c5dvx,,,,35cb096eda5d
+97,"good 4 u","Olivia Rodrigo","SOUR",2021,4ZtFanR9U6ndgddUvNcjcG,,,,e58c74b24e75
+98,"As It Was","Harry Styles","",2022,,,,,a0d0ffd35fb6
+99,"Flowers","Miley Cyrus","Endless Summer Vacation",2023,7DSAEUvxU8FajXtRloy8M0,,,,2d0465a2cf31
+100,"TEXAS HOLD 'EM","Beyoncé","TEXAS HOLD 'EM",2024,7AYmToZ5y67fBjq4RLFbuq,,,,c8de22be7a9d

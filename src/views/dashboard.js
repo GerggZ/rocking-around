@@ -1,15 +1,20 @@
 import { decks, getTrackById } from '../tracks.js';
 import { getPlayableCardIds, openRandomCard } from '../random-cards.js';
 
-export function renderDashboardView(container, providerName) {
+export function renderDashboardView(container, providerName, onChangeProvider, onLogout) {
   // Render Card Content
   container.innerHTML = `
     <div id="dashboard-view" class="view-state">
       <h2>Rockin' Around</h2>
-      <div class="status-badge authenticated">CONNECTED (${providerName.toUpperCase()})</div>
+      <div class="status-badge authenticated">${providerName === 'tidal' ? 'TIDAL · 30-second preview' : 'Spotify · Full track'}</div>
+      <button id="change-provider-btn" class="provider-switch" type="button">Change provider</button>
+      ${providerName === 'spotify' ? '<button id="disconnect-spotify-btn" class="provider-switch" type="button">Disconnect Spotify</button>' : ''}
       <p class="dashboard-hint">Choose a deck and draw a random card.</p>
     </div>
   `;
+
+  container.querySelector('#change-provider-btn').addEventListener('click', onChangeProvider);
+  container.querySelector('#disconnect-spotify-btn')?.addEventListener('click', onLogout);
 
   // Render Deck Controls Below Mountain Card
   const trackSection = document.getElementById('external-content');
@@ -83,7 +88,7 @@ export function renderDashboardView(container, providerName) {
 
     playableIds = getPlayableCardIds(deck, providerName);
     playButton.disabled = playableIds.length === 0;
-    status.textContent = playButton.disabled ? 'This deck has no playable cards.' : '';
+    status.textContent = playButton.disabled ? `This deck has no ${providerName === 'tidal' ? 'TIDAL' : 'Spotify'} track IDs yet.` : '';
   }
 
   playButton.addEventListener('click', () => {

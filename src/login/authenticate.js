@@ -2,15 +2,33 @@ import * as spotify from './authenticate_spotify.js';
 
 let activeProvider = 'spotify';
 
-export async function login(provider = 'spotify') {
-  activeProvider = provider;
-  if (provider === 'spotify') {
-    await spotify.login();
-  }
+function resumeCard() {
+  const pendingSong = sessionStorage.getItem('pending_song');
+  sessionStorage.removeItem('pending_song');
+  window.location.href = pendingSong
+    ? window.location.pathname + '?' + new URLSearchParams({ song: pendingSong })
+    : window.location.pathname;
 }
 
-// Automatically uses the current window location (localhost during dev, github.io in production)
-const REDIRECT_URI = window.location.origin + window.location.pathname;
+export async function login(provider = 'spotify') {
+  if (provider !== 'spotify' && provider !== 'tidal') return;
+  sessionStorage.setItem('selected_provider', provider);
+  if (provider === 'tidal' || spotify.getToken()) {
+    resumeCard();
+    return;
+  }
+  await spotify.login();
+}
+
+export function changeProvider() {
+  sessionStorage.setItem('selected_provider', 'choose');
+  window.location.reload();
+}
+
+export function logout() {
+  spotify.logout();
+  changeProvider();
+}
 
 export async function checkAuth() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -18,6 +36,8 @@ export async function checkAuth() {
 
   if (code) {
     const token = await spotify.handleCallback(code);
+    activeProvider = 'spotify';
+    sessionStorage.setItem('selected_provider', 'spotify');
 
     // 🎯 Check if there was a saved card waiting before login!
     const pendingSong = sessionStorage.getItem('pending_song');
@@ -31,7 +51,15 @@ export async function checkAuth() {
     return { authenticated: true, token, provider: 'spotify' };
   } 
   
-  else if (spotify.getToken()) {
+  const selectedProvider = sessionStorage.getItem('selected_provider');
+  if (selectedProvider === 'choose') return { authenticated: false };
+  if (selectedProvider === 'tidal') {
+    activeProvider = 'tidal';
+    return { authenticated: true, provider: 'tidal' };
+  }
+
+  if (spotify.getToken()) {
+    activeProvider = 'spotify';
     return { authenticated: true, token: spotify.getToken(), provider: 'spotify' };
   }
 
@@ -41,6 +69,8 @@ export async function checkAuth() {
 export async function initPlayer(onReady, onError, onStateChange) {
   if (activeProvider === 'spotify') {
     await spotify.initPlayer(onReady, onError, onStateChange);
+  } else {
+    onError('TIDAL preview playback is awaiting app credentials and a token service.');
   }
 }
 

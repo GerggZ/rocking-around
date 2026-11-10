@@ -85,7 +85,7 @@ async function initApp() {
       sessionStorage.setItem('pending_song', songId);
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-    renderUnauthenticatedView(cardMount, () => auth.login('spotify'));
+    renderUnauthenticatedView(cardMount, auth.login);
     return;
   }
 
@@ -112,7 +112,7 @@ async function initApp() {
         }
       }
       openRandomCard(randomDeck, nextCards);
-    } : null);
+    } : null, authState.provider, auth.changeProvider);
 
     // Bind Player Controls
     const playBtn = document.getElementById('play-pause-btn');
@@ -134,7 +134,7 @@ async function initApp() {
     });
 
     if (!currentTrackId) {
-      document.getElementById('status-msg').textContent = 'Playback is unavailable for this card.';
+      document.getElementById('status-msg').textContent = `This card has no ${authState.provider === 'tidal' ? 'TIDAL' : 'Spotify'} track ID yet.`;
       return;
     }
 
@@ -143,13 +143,13 @@ async function initApp() {
       () => { 
         if (playBtn) playBtn.disabled = false; 
       },
-      (err) => { console.error(err); },
+      (err) => { document.getElementById('status-msg').textContent = String(err); },
       handlePlayerStateChange
     );
   } 
   // STATE 3: Authenticated Dashboard (Opened homepage or no card active)
   else {
-    renderDashboardView(cardMount, authState.provider);
+    renderDashboardView(cardMount, authState.provider, auth.changeProvider, auth.logout);
   }
 }
 
