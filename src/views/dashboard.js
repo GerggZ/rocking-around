@@ -17,6 +17,16 @@ export function renderDashboardView(container, providerName) {
 
   trackSection.innerHTML = `
     <div class="external-section">
+      <form class="card-lookup" id="card-lookup">
+        <label class="section-title" for="card-lookup-id">Find Card by ID</label>
+        <div class="card-lookup-controls">
+          <input id="card-lookup-id" type="text" placeholder="Paste a UniqueID"
+                 autocomplete="off" autocapitalize="none" spellcheck="false"
+                 aria-describedby="card-lookup-status">
+          <button class="action-btn" type="submit">Open Card</button>
+        </div>
+        <p id="card-lookup-status" role="status"></p>
+      </form>
       <h3 id="deck-picker-title" class="section-title">Select Deck</h3>
       <details class="deck-picker">
         <summary aria-labelledby="deck-picker-title deck-selection">
@@ -28,16 +38,6 @@ export function renderDashboardView(container, providerName) {
       </details>
       <button id="random-card" class="action-btn" type="button">Play Random Card</button>
       <p id="deck-status" role="status"></p>
-      <form class="card-lookup" id="card-lookup">
-        <label class="section-title" for="card-lookup-id">Find Card by ID</label>
-        <div class="card-lookup-controls">
-          <input id="card-lookup-id" type="text" placeholder="Paste a UniqueID"
-                 autocomplete="off" autocapitalize="none" spellcheck="false"
-                 aria-describedby="card-lookup-status">
-          <button class="action-btn" type="submit">Open Card</button>
-        </div>
-        <p id="card-lookup-status" role="status"></p>
-      </form>
     </div>
   `;
 
