@@ -269,6 +269,42 @@ p {
   color: var(--walnut-brown);
 }
 
+.section-title[for="deck-select"] {
+  display: block;
+}
+
+#deck-select {
+  width: min(100%, 18rem);
+  min-height: 44px;
+  margin: 0 auto 1.5rem;
+  padding: 0.65rem 2.5rem 0.65rem 1rem;
+  color: var(--walnut-brown);
+  font-size: 0.85rem;
+  font-weight: 650;
+  appearance: none;
+  background: rgba(253, 251, 247, 0.95) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%236b4423' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") right 0.9rem center / 1rem no-repeat;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+}
+
+#deck-select:hover {
+  border-color: var(--leaf-green);
+}
+
+#deck-select:focus-visible {
+  outline: 2px solid var(--leaf-green);
+  outline-offset: 3px;
+}
+
+@media (forced-colors: active) {
+  #deck-select {
+    appearance: auto;
+    background-image: none;
+  }
+}
+
 .track-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
