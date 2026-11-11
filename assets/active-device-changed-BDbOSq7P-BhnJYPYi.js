@@ -1,0 +1,1 @@
+var e=`active-device-changed`;function t(t){return new CustomEvent(e,{detail:t})}export{t as n,e as t};
