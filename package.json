@@ -4,14 +4,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
+    "dev": "vite --host 127.0.0.1 --port 5173 --strictPort",
+    "dev:http": "vite --host 127.0.0.1 --port 5173 --strictPort --mode development-http",
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "start:tidal": "node --env-file-if-exists=.env server/tidal-server.js"
   },
   "devDependencies": {
     "gh-pages": "^6.1.1",
-    "vite": "^8.2.0"
+    "vite": "^8.2.0",
+    "vite-plugin-mkcert": "^2.1.0"
+  },
+  "dependencies": {
+    "@tidal-music/player": "^0.20.1"
   }
 }

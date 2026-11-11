@@ -1,61 +1,61 @@
 id,title,artist,album,year,spotify,tidal,apple,youtube,UniqueID
 1,"Earth Angel","The Penguins","",1954,,,,,985aff792443
-2,"Get a Job","The Silhouettes","",1957,,,,,dfc639e725bb
-3,"Monster Mash","Bobby ""Boris"" Pickett","",1962,,,,,cc0aa1d29b0d
-4,"Pipeline","The Chantays","",1962,,,,,d45058367692
-5,"Wipe Out","The Surfaris","",1963,,,,,774a89b2904f
-6,"Psychotic Reaction","Count Five","",1966,,,,,11aabd9055d5
-7,"Little Bit O' Soul","The Music Explosion","",1967,,,,,58545ab41e95
-8,"Fire","The Crazy World of Arthur Brown","",1968,,,,,00f5345c69d8
-9,"Spirit In The Sky","Norman Greenbaum","",1969,,,,,155c714b2f58
-10,"Na Na Hey Hey Kiss Him Goodbye","Steam","",1969,,,,,6c5ab8e7c277
-11,"Something in the Air","Thunderclap Newman","",1969,,,,,b36410679259
-12,"In the Summertime","Mungo Jerry","In the Summertime",1970,3RNyGLgSvmVRZ7xKUp8Wgd,,,,2b1297eec081
-13,"Kung Fu Fighting","Carl Douglas","",1974,,,,,28af07485f5e
-14,"Play That Funky Music","Wild Cherry","'70s Greatest Hits",1976,,,,,c4b8c1201ca1
-15,"Ca Plane Pour Moi","Plastic Bertrand","Plastic Bertrand",1977,4sf4Lq52b2iCoAgpge7a9g,,,,5cf9400aec30
-16,"Black Betty","Ram Jam","",1977,,,,,f56362fc8507
-17,"Ring My Bell","Anita Ward","",1979,,,,,419c97e70cd4
-18,"Funkytown","Lipps Inc.","",1979,,,,,31154c29ec42
-19,"Pop Muzik","M","",1979,,,,,a34578360597
-20,"Video Killed the Radio Star","The Buggles","",1979,,,,,f7e5d7416a9b
-21,"Tainted Love","Soft Cell","",1981,,,,,ca965e59dea6
-22,"Mickey","Toni Basil","",1981,,,,,5c37d10d24ce
-23,"Come On Eileen","Dexys Midnight Runners","",1982,,,,,d9ab0f84ccf6
-24,"Pass the Dutchie","Musical Youth","",1982,,,,,ac86ac0e93b6
-25,"It's Raining Men","The Weather Girls","Success",1982,2IvetNzSZMH5gwjInoyr18,,,,fa72ff20b0bb
-26,"Too Shy","Kajagoogoo","",1983,,,,,8f17515e4917
-27,"Tarzan Boy","Baltimora","",1985,,,,,d15efa30b812
-28,"Don't Worry, Be Happy","Bobby McFerrin","",1988,,,,,399bac1555c4
-29,"Groove Is in the Heart","Deee-Lite","",1990,,,,,25aee9c89d03
-30,"I'm Too Sexy","Right Said Fred","",1991,,,,,0eae98a5d2fe
-31,"What's Up?","4 Non Blondes","Bigger, Better, Faster, More !",1992,0jWgAnTrNZmOGmqgvHhZEm,,,,bc366dd1caa8
-32,"No Rain","Blind Melon","Blind Melon",1992,6txWz9UapYHVxEd7dDIHXT,,,,e536be30fc37
-33,"Would I Lie to You?","Charles & Eddie","",1992,,,,,3c9b3fe284da
-34,"Saturday Night","Whigfield","",1992,,,,,342455f21532
-35,"What Is Love","Haddaway","",1993,,,,,ec00c63fb753
-36,"Cotton Eye Joe","Rednex","",1994,,,,,dab67b4be069
-37,"How Bizarre","OMC","",1995,,,,,ccd74ee57e30
-38,"Tubthumping","Chumbawamba","",1997,,,,,99596fb0f90e
-39,"Save Tonight","Eagle-Eye Cherry","Desireless",1997,1t2Hq2WIBcZINOEnK6mdJG,,,,c64ff607e8d1
-40,"Your Woman","White Town","",1997,,,,,fe782f88ffc8
-41,"Better Off Alone","Alice Deejay","",1998,,,,,d6aa1b649683
-42,"Blue (Da Ba Dee)","Eiffel 65","",1998,,,,,b7ce4670400b
-43,"You Get What You Give","New Radicals","",1998,,,,,ba1e4afc1b1f
-44,"Closing Time","Semisonic","Feeling Strangely Fine",1998,087OBLtoeS3Q6j0k6tMNAI,,,,a48a2bfc0f7c
-45,"Butterfly","Crazy Town","",1999,,,,,daf81efabb57
-46,"Steal My Sunshine","Len","",1999,,,,,2a58a852a49e
-47,"Mambo No. 5 (a Little Bit of...)","Lou Bega","",1999,,,,,94247bbd2e18
-48,"She's so High","Tal Bachman","Tal Bachman",1999,7mnGQesk1TzQLzQ9bYWZPR,,,,c9968ac5d167
-49,"Who Let the Dogs Out","Baha Men","",2000,,,,,dfcd632865f4
-50,"Teenage Dirtbag","Wheatus","",2000,,,,,6276cdfb4d35
-51,"The Ketchup Song (Aserejé)","Las Ketchup","",2002,,,,,bf5b4a497e64
-52,"Stacy's Mom","Fountains Of Wayne","Welcome Interstate Managers",2003,27L8sESb3KR79asDUBu8nW,,,,a08eae93f89e
-53,"Bad Day","Daniel Powter","",2005,,,,,41f84318845e
-54,"Crazy","Gnarls Barkley","St. Elsewhere",2006,1vxw6aYJls2oq3gW0DujAo,,,,08a3311b3f5e
-55,"Safe And Sound","Capital Cities","In A Tidal Wave Of Mystery",2011,0oFvhxNf3mBII26pPI3a5I,,,,67d8a3cc6f07
-56,"Somebody That I Used to Know (feat. Kimbra)","Gotye","",2011,,,,,3b1c0d8765d9
-57,"Let Her Go","Passenger","",2012,,,,,c57c81b294df
-58,"Best Day Of My Life","American Authors","",2013,,,,,80b7cee4410e
-59,"Rude","MAGIC!","",2013,,,,,95aeb44771f4
-60,"Shut Up and Dance","WALK THE MOON","",2014,1K66si1ZELsRZzg7m7mcps,,,,dd9dd5471570
+2,"Get a Job","The Silhouettes","",1957,,8672338,,,dfc639e725bb
+3,"Monster Mash","Bobby ""Boris"" Pickett","",1962,,35708067,,,cc0aa1d29b0d
+4,"Pipeline","The Chantays","",1962,,35273958,,,d45058367692
+5,"Wipe Out","The Surfaris","",1963,,85971720,,,774a89b2904f
+6,"Psychotic Reaction","Count Five","",1966,,35635758,,,11aabd9055d5
+7,"Little Bit O' Soul","The Music Explosion","",1967,,3236663,,,58545ab41e95
+8,"Fire","The Crazy World of Arthur Brown","",1968,,615160,,,00f5345c69d8
+9,"Spirit In The Sky","Norman Greenbaum","",1969,,428746664,,,155c714b2f58
+10,"Na Na Hey Hey Kiss Him Goodbye","Steam","",1969,,94435754,,,6c5ab8e7c277
+11,"Something in the Air","Thunderclap Newman","",1969,,91980877,,,b36410679259
+12,"In the Summertime","Mungo Jerry","In the Summertime",1970,3RNyGLgSvmVRZ7xKUp8Wgd,490860774,,,2b1297eec081
+13,"Kung Fu Fighting","Carl Douglas","",1974,,493064051,,,28af07485f5e
+14,"Play That Funky Music","Wild Cherry","'70s Greatest Hits",1976,,545672,,,c4b8c1201ca1
+15,"Ca Plane Pour Moi","Plastic Bertrand","Plastic Bertrand",1977,4sf4Lq52b2iCoAgpge7a9g,255146671,,,5cf9400aec30
+16,"Black Betty","Ram Jam","",1977,,30265305,,,f56362fc8507
+17,"Ring My Bell","Anita Ward","",1979,,82371353,,,419c97e70cd4
+18,"Funkytown","Lipps Inc.","",1979,,173304114,,,31154c29ec42
+19,"Pop Muzik","M","",1979,,490841591,,,a34578360597
+20,"Video Killed the Radio Star","The Buggles","",1979,,2531405,,,f7e5d7416a9b
+21,"Tainted Love","Soft Cell","",1981,,571868,,,ca965e59dea6
+22,"Mickey","Toni Basil","",1981,,384175980,,,5c37d10d24ce
+23,"Come On Eileen","Dexys Midnight Runners","",1982,,126347035,,,d9ab0f84ccf6
+24,"Pass the Dutchie","Musical Youth","",1982,,101149201,,,ac86ac0e93b6
+25,"It's Raining Men","The Weather Girls","Success",1982,2IvetNzSZMH5gwjInoyr18,4710246,,,fa72ff20b0bb
+26,"Too Shy","Kajagoogoo","",1983,,1379251,,,8f17515e4917
+27,"Tarzan Boy","Baltimora","",1985,,1527873,,,d15efa30b812
+28,"Don't Worry, Be Happy","Bobby McFerrin","",1988,,1323432,,,399bac1555c4
+29,"Groove Is in the Heart","Deee-Lite","",1990,,3267941,,,25aee9c89d03
+30,"I'm Too Sexy","Right Said Fred","",1991,,303270798,,,0eae98a5d2fe
+31,"What's Up?","4 Non Blondes","Bigger, Better, Faster, More !",1992,0jWgAnTrNZmOGmqgvHhZEm,634519,,,bc366dd1caa8
+32,"No Rain","Blind Melon","Blind Melon",1992,6txWz9UapYHVxEd7dDIHXT,1332492,,,e536be30fc37
+33,"Would I Lie to You?","Charles & Eddie","",1992,,126624134,,,3c9b3fe284da
+34,"Saturday Night","Whigfield","",1992,,70686669,,,342455f21532
+35,"What Is Love","Haddaway","",1993,,492802426,,,ec00c63fb753
+36,"Cotton Eye Joe","Rednex","",1994,,80186819,,,dab67b4be069
+37,"How Bizarre","OMC","",1995,,79970915,,,ccd74ee57e30
+38,"Tubthumping","Chumbawamba","",1997,,2893885,,,99596fb0f90e
+39,"Save Tonight","Eagle-Eye Cherry","Desireless",1997,1t2Hq2WIBcZINOEnK6mdJG,610923,,,c64ff607e8d1
+40,"Your Woman","White Town","",1997,,492919891,,,fe782f88ffc8
+41,"Better Off Alone","Alice Deejay","",1998,,47469776,,,d6aa1b649683
+42,"Blue (Da Ba Dee)","Eiffel 65","",1998,,539111445,,,b7ce4670400b
+43,"You Get What You Give","New Radicals","",1998,,2529963,,,ba1e4afc1b1f
+44,"Closing Time","Semisonic","Feeling Strangely Fine",1998,087OBLtoeS3Q6j0k6tMNAI,96961926,,,a48a2bfc0f7c
+45,"Butterfly","Crazy Town","",1999,,34793,,,daf81efabb57
+46,"Steal My Sunshine","Len","",1999,,33902226,,,2a58a852a49e
+47,"Mambo No. 5 (a Little Bit of...)","Lou Bega","",1999,,81794041,,,94247bbd2e18
+48,"She's so High","Tal Bachman","Tal Bachman",1999,7mnGQesk1TzQLzQ9bYWZPR,1311156,,,c9968ac5d167
+49,"Who Let the Dogs Out","Baha Men","",2000,,1370716,,,dfcd632865f4
+50,"Teenage Dirtbag","Wheatus","",2000,,1924,,,6276cdfb4d35
+51,"The Ketchup Song (Aserejé)","Las Ketchup","",2002,,89218164,,,bf5b4a497e64
+52,"Stacy's Mom","Fountains Of Wayne","Welcome Interstate Managers",2003,27L8sESb3KR79asDUBu8nW,130434,,,a08eae93f89e
+53,"Bad Day","Daniel Powter","",2005,,292734,,,41f84318845e
+54,"Crazy","Gnarls Barkley","St. Elsewhere",2006,1vxw6aYJls2oq3gW0DujAo,314701,,,08a3311b3f5e
+55,"Safe And Sound","Capital Cities","In A Tidal Wave Of Mystery",2011,0oFvhxNf3mBII26pPI3a5I,174840352,,,67d8a3cc6f07
+56,"Somebody That I Used to Know (feat. Kimbra)","Gotye","",2011,,13467719,,,3b1c0d8765d9
+57,"Let Her Go","Passenger","",2012,,18930892,,,c57c81b294df
+58,"Best Day Of My Life","American Authors","",2013,,29560407,,,80b7cee4410e
+59,"Rude","MAGIC!","",2013,,23046116,,,95aeb44771f4
+60,"Shut Up and Dance","WALK THE MOON","",2014,1K66si1ZELsRZzg7m7mcps,37896389,,,dd9dd5471570

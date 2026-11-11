@@ -1,7 +1,6 @@
-export function renderPlayerView(container, trackData, onNextRandomCard, providerName, onChangeProvider) {
+export function renderPlayerView(container, trackData, onNextRandomCard) {
   container.innerHTML = `
     <div id="game-view" class="view-state">
-      <div class="status-badge authenticated">${providerName === 'tidal' ? 'TIDAL · 30-second preview' : 'Spotify · Full track'}</div>
       <p id="status-msg"  class="status-msg"></p>
 
       <div class="player-wrapper">
@@ -36,10 +35,8 @@ export function renderPlayerView(container, trackData, onNextRandomCard, provide
   if (externalSection) {
     externalSection.innerHTML = `
       ${onNextRandomCard ? '<button id="next-random-card" class="action-btn" type="button">Next Random Card</button>' : ''}
-      <button id="change-provider-btn" class="provider-switch" type="button">Change provider</button>
       <button id="back-home-btn" class="outer-back-btn">← Back to Menu</button>
     `;
-    externalSection.querySelector('#change-provider-btn').addEventListener('click', onChangeProvider);
     const nextButton = externalSection.querySelector('#next-random-card');
     nextButton?.addEventListener('click', async () => {
       nextButton.disabled = true;

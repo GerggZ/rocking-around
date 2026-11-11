@@ -2,7 +2,7 @@ import * as auth from './login/authenticate.js';
 import { getTrackById } from './tracks.js';
 import { getPlayableCardIds, openRandomCard, restoreRandomDeck } from './random-cards.js';
 
-import { renderUnauthenticatedView } from './views/unauthenticated.js';
+import { renderProviderMenu } from './views/provider-menu.js';
 import { renderDashboardView } from './views/dashboard.js';
 import { renderPlayerView } from './views/player.js';
 
@@ -78,16 +78,13 @@ async function initApp() {
   // Clear External Mount Zone
   if (externalMount) externalMount.innerHTML = '';
 
-  // STATE 1: Unauthenticated
-  if (!authState.authenticated) {
-    // If a card was scanned before logging in, remember it!
-    if (songId) {
-      sessionStorage.setItem('pending_song', songId);
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-    renderUnauthenticatedView(cardMount, auth.login);
-    return;
-  }
+  const provider = authState.authenticated ? authState.provider : null;
+  const openProviderMenu = renderProviderMenu({
+    provider,
+    connected: auth.connectedProviders(),
+    onSelect: auth.login,
+    onDisconnect: auth.logout
+  });
 
   const randomDeck = restoreRandomDeck(songId);
 
@@ -99,9 +96,9 @@ async function initApp() {
       return;
     }
 
-    currentTrackId = trackData[authState.provider];
+    currentTrackId = trackData[provider];
     const nextCards = randomDeck
-      ? getPlayableCardIds(randomDeck, authState.provider).filter(id => id !== songId)
+      ? getPlayableCardIds(randomDeck, provider).filter(id => id !== songId)
       : [];
     renderPlayerView(cardMount, trackData, nextCards.length ? async () => {
       if (trackStarted) {
@@ -112,7 +109,7 @@ async function initApp() {
         }
       }
       openRandomCard(randomDeck, nextCards);
-    } : null, authState.provider, auth.changeProvider);
+    } : null);
 
     // Bind Player Controls
     const playBtn = document.getElementById('play-pause-btn');
@@ -120,11 +117,24 @@ async function initApp() {
     const answerBox = document.getElementById('answer-box');
 
     playBtn?.addEventListener('click', async () => {
-      if (!trackStarted) {
-        await auth.playTrack(currentTrackId);
-        trackStarted = true;
-      } else {
-        await auth.togglePlay();
+      if (!provider) {
+        openProviderMenu();
+        return;
+      }
+      const status = document.getElementById('status-msg');
+      playBtn.disabled = true;
+      status.textContent = '';
+      try {
+        if (!trackStarted) {
+          await auth.playTrack(currentTrackId);
+          trackStarted = true;
+        } else {
+          await auth.togglePlay();
+        }
+      } catch (error) {
+        status.textContent = error.message || 'Could not play this card. Please try again.';
+      } finally {
+        playBtn.disabled = false;
       }
     });
 
@@ -133,8 +143,15 @@ async function initApp() {
       revealBtn.textContent = isHidden ? 'Reveal Track Info' : 'Hide Track Info';
     });
 
+    if (!provider) {
+      playBtn.disabled = false;
+      document.getElementById('status-msg').textContent = 'Choose a music provider to play.';
+      openProviderMenu();
+      return;
+    }
+
     if (!currentTrackId) {
-      document.getElementById('status-msg').textContent = `This card has no ${authState.provider === 'tidal' ? 'TIDAL' : 'Spotify'} track ID yet.`;
+      document.getElementById('status-msg').textContent = `This card has no ${{ spotify: 'Spotify', tidal: 'TIDAL' }[provider]} track ID yet.`;
       return;
     }
 
@@ -143,13 +160,16 @@ async function initApp() {
       () => { 
         if (playBtn) playBtn.disabled = false; 
       },
-      (err) => { document.getElementById('status-msg').textContent = String(err); },
+      (err) => {
+        trackStarted = false;
+        document.getElementById('status-msg').textContent = String(err);
+      },
       handlePlayerStateChange
     );
   } 
   // STATE 3: Authenticated Dashboard (Opened homepage or no card active)
   else {
-    renderDashboardView(cardMount, authState.provider, auth.changeProvider, auth.logout);
+    renderDashboardView(cardMount, provider);
   }
 }
 

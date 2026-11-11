@@ -11,6 +11,7 @@
   --leaf-glow: rgba(45, 106, 79, 0.2);
 
   --walnut-brown: #6b4423;
+  --scrollbar-brown: rgba(107, 68, 35, 0.5); /* walnut brown at 50% */
   --amber-sun: #d97724;
 
   --text-dark: #1b281f;
@@ -26,16 +27,23 @@
 }
 
 body {
-  min-height: 100vh;
+  height: 100dvh;
   margin: 0;
-  padding: 2rem 1rem 4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: var(--text-dark);
   background-color: var(--sky-top);
-  position: relative;
+  overflow: hidden;
+}
+
+/* The page scrolls inside this layer instead of the window, so the scrollbar
+   is drawn on top of the mountain background rather than beside it. */
+.page-scroll {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  padding: 2rem 1rem 4rem;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Background Mountain Backdrop */
@@ -53,6 +61,7 @@ body {
 .app-viewport {
   position: relative;
   z-index: 1;
+  margin: auto;
   width: 100%;
   max-width: 440px;
   display: flex;
@@ -119,10 +128,11 @@ p {
   line-height: 1.4;
 }
 
-.dashboard-hint {
-  margin-top: 1rem;
-  font-weight: 600;
+#dashboard-view h2 {
+  position: relative;
+  top: -0.90rem;
   color: var(--walnut-brown);
+  font-size: 1.8rem;
 }
 
 /* --- STATE 3: GAME VIEW SPACING FIX --- */
@@ -259,6 +269,11 @@ p {
 .external-section {
   width: 100%;
   text-align: center;
+}
+
+/* The card artwork has empty space below it; tuck the main page's controls up into it. */
+.dashboard-controls {
+  margin-top: -3.5rem;
 }
 
 .section-title {
@@ -470,4 +485,161 @@ p {
 .provider-switch:focus-visible {
   outline: 2px solid var(--leaf-green);
   outline-offset: 2px;
+}
+
+/* Music provider controls stay separate from the game artwork. */
+.provider-control {
+  position: fixed;
+  top: max(1rem, env(safe-area-inset-top));
+  right: max(1rem, env(safe-area-inset-right));
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: var(--walnut-brown);
+  font-size: 0.8rem;
+  font-weight: 650;
+  background: #fdfbf7;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.provider-dialog {
+  width: min(334px, calc(100vw - 1rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 2rem 3.25rem;
+  overflow-y: auto;
+  color: var(--text-dark);
+  background: url('/src/assets/provider-climbing-card.png') center / 100% 100% no-repeat;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.provider-dialog::backdrop {
+  background: rgba(27, 40, 31, 0.45);
+}
+
+body:has(.provider-dialog[open]) {
+  overflow: hidden;
+}
+
+.provider-dialog-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.provider-dialog-heading h2 {
+  font-size: 1.2rem;
+}
+
+.provider-close {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  padding: 0;
+  color: var(--walnut-brown);
+  font-size: 1.5rem;
+  background: transparent;
+  border: 0;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.provider-option {
+  padding: 1rem 0;
+}
+
+.provider-option + .provider-option {
+  border-top: 1px solid var(--border);
+}
+
+.provider-option h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+
+.provider-option .action-btn {
+  max-width: none;
+  min-height: 44px;
+  margin-top: 0.65rem;
+}
+
+.provider-option .provider-switch {
+  display: block;
+}
+
+.provider-control:focus-visible,
+.provider-close:focus-visible,
+.provider-dialog .action-btn:focus-visible {
+  outline: 2px solid var(--leaf-green);
+  outline-offset: 3px;
+}
+
+.provider-dialog button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.provider-control,
+.provider-brand-icon {
+  --provider-icon-paper: #fff2d1;
+  color: var(--leaf-green);
+}
+
+.provider-control {
+  background: var(--provider-icon-paper);
+}
+
+.provider-control svg {
+  width: 24px;
+  height: 24px;
+}
+
+.provider-option h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.provider-brand-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  background: var(--provider-icon-paper);
+  border: 1px solid var(--border);
+  border-radius: 0.65rem;
+}
+
+.provider-brand-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Slim walnut-brown scrollbars on a transparent track, everywhere. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-brown) transparent;
+}
+
+/* Older Safari, which ignores the two properties above. */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-brown);
+  border-radius: 999px;
 }

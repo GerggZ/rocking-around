@@ -1,100 +1,109 @@
 import * as spotify from './authenticate_spotify.js';
+import * as tidal from './authenticate_tidal.js';
 
-let activeProvider = 'spotify';
+// Every provider module exports the same functions: login, logout, isCallback,
+// handleCallback, hasSession, initPlayer, playTrack, pauseTrack, togglePlay
+// and getCurrentState. This router treats them all the same way.
+const providers = { spotify, tidal };
+let activeProvider = null;
 
-function resumeCard() {
+function active() {
+  return providers[activeProvider];
+}
+
+function openPendingCard() {
   const pendingSong = sessionStorage.getItem('pending_song');
   sessionStorage.removeItem('pending_song');
-  window.location.href = pendingSong
-    ? window.location.pathname + '?' + new URLSearchParams({ song: pendingSong })
-    : window.location.pathname;
+  if (pendingSong) {
+    window.location.href = `${window.location.pathname}?song=${encodeURIComponent(pendingSong)}`;
+    return true;
+  }
+  return false;
 }
 
-export async function login(provider = 'spotify') {
-  if (provider !== 'spotify' && provider !== 'tidal') return;
-  sessionStorage.setItem('selected_provider', provider);
-  if (provider === 'tidal' || spotify.getToken()) {
-    resumeCard();
+export function connectedProviders() {
+  return Object.fromEntries(Object.entries(providers).map(([name, provider]) => [name, provider.hasSession()]));
+}
+
+export async function login(name) {
+  const provider = providers[name];
+  if (!provider) return;
+  const params = new URLSearchParams(window.location.search);
+  const song = params.get('song') || params.get('card');
+  if (song) sessionStorage.setItem('pending_song', song);
+  else sessionStorage.removeItem('pending_song');
+  await pauseTrack();
+  sessionStorage.setItem('selected_provider', name);
+  if (provider.hasSession()) {
+    if (!openPendingCard()) window.location.reload();
     return;
   }
-  await spotify.login();
+  await provider.login();
 }
 
-export function changeProvider() {
-  sessionStorage.setItem('selected_provider', 'choose');
+export function logout(name) {
+  const provider = providers[name];
+  if (!provider) return;
+  provider.logout();
+  if (sessionStorage.getItem('selected_provider') === name) sessionStorage.removeItem('selected_provider');
   window.location.reload();
 }
 
-export function logout() {
-  spotify.logout();
-  changeProvider();
-}
-
 export async function checkAuth() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const code = urlParams.get('code');
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
 
   if (code) {
-    const token = await spotify.handleCallback(code);
-    activeProvider = 'spotify';
-    sessionStorage.setItem('selected_provider', 'spotify');
-
-    // 🎯 Check if there was a saved card waiting before login!
-    const pendingSong = sessionStorage.getItem('pending_song');
-    if (pendingSong) {
-      sessionStorage.removeItem('pending_song');
-      // Jump straight to the scanned card!
-      window.location.href = `${window.location.pathname}?song=${encodeURIComponent(pendingSong)}`;
-      return { authenticated: true, token, provider: 'spotify' };
+    const name = Object.keys(providers).find(key => providers[key].isCallback(params));
+    if (name) {
+      await providers[name].handleCallback(code);
+      activeProvider = name;
+      sessionStorage.setItem('selected_provider', name);
+      openPendingCard();
+      return { authenticated: true, provider: name };
     }
-
-    return { authenticated: true, token, provider: 'spotify' };
-  } 
-  
-  const selectedProvider = sessionStorage.getItem('selected_provider');
-  if (selectedProvider === 'choose') return { authenticated: false };
-  if (selectedProvider === 'tidal') {
-    activeProvider = 'tidal';
-    return { authenticated: true, provider: 'tidal' };
+    // A login response nobody asked for (or an expired one): drop it.
+    window.history.replaceState({}, document.title, window.location.pathname);
   }
 
-  if (spotify.getToken()) {
-    activeProvider = 'spotify';
-    return { authenticated: true, token: spotify.getToken(), provider: 'spotify' };
+  const selected = sessionStorage.getItem('selected_provider');
+  if (providers[selected]) {
+    activeProvider = selected;
+  } else {
+    activeProvider = Object.keys(providers).find(key => providers[key].hasSession()) ?? null;
   }
-
-  return { authenticated: false };
+  return activeProvider
+    ? { authenticated: true, provider: activeProvider }
+    : { authenticated: false, provider: null };
 }
 
 export async function initPlayer(onReady, onError, onStateChange) {
-  if (activeProvider === 'spotify') {
-    await spotify.initPlayer(onReady, onError, onStateChange);
-  } else {
-    onError('TIDAL preview playback is awaiting app credentials and a token service.');
+  if (!active()) return;
+  // Without a login there is nothing to connect yet; pressing Play signs in.
+  if (!active().hasSession()) {
+    onReady();
+    return;
   }
+  await active().initPlayer(onReady, onError, onStateChange);
 }
 
 export async function playTrack(trackId) {
-  if (activeProvider === 'spotify') {
-    await spotify.playTrack(trackId);
+  if (!active()) return;
+  if (!active().hasSession()) {
+    await login(activeProvider);
+    return;
   }
+  await active().playTrack(trackId);
 }
 
 export async function pauseTrack() {
-  if (activeProvider === 'spotify') {
-    await spotify.pauseTrack();
-  }
+  await active()?.pauseTrack();
 }
 
 export async function togglePlay() {
-  if (activeProvider === 'spotify') {
-    await spotify.togglePlay();
-  }
+  await active()?.togglePlay();
 }
 
 export async function getCurrentState() {
-  if (activeProvider === 'spotify') {
-    return await spotify.getCurrentState();
-  }
-  return null;
+  return active() ? await active().getCurrentState() : null;
 }

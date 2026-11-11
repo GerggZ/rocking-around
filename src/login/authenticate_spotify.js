@@ -1,4 +1,4 @@
-const CLIENT_ID = "82eeae9401364e56b2ca10cbd0b291f8"; // <-- Ensure your Client ID is here
+const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const REDIRECT_URI = window.location.origin + window.location.pathname;
 
 let spotifyPlayer = null;
@@ -19,8 +19,11 @@ async function generateCodeChallenge(verifier) {
 }
 
 export async function login() {
+  if (!CLIENT_ID) throw new Error('Spotify client ID is missing from the site configuration.');
   const codeVerifier = generateRandomString(64);
+  const state = 'spotify-' + generateRandomString(16);
   sessionStorage.setItem('spotify_code_verifier', codeVerifier);
+  sessionStorage.setItem('spotify_oauth_state', state);
   const codeChallenge = await generateCodeChallenge(codeVerifier);
   
   const scopes = "streaming user-read-email user-read-private user-modify-playback-state";
@@ -31,12 +34,20 @@ export async function login() {
   authUrl.searchParams.append("redirect_uri", REDIRECT_URI);
   authUrl.searchParams.append("code_challenge", codeChallenge);
   authUrl.searchParams.append("code_challenge_method", "S256");
+  authUrl.searchParams.append("state", state);
 
   window.location.href = authUrl.toString();
 }
 
+export function isCallback(params) {
+  const state = params.get('state');
+  return Boolean(state && state === sessionStorage.getItem('spotify_oauth_state'));
+}
+
 export async function handleCallback(code) {
   const verifier = sessionStorage.getItem('spotify_code_verifier');
+  sessionStorage.removeItem('spotify_code_verifier');
+  sessionStorage.removeItem('spotify_oauth_state');
   window.history.replaceState({}, document.title, window.location.pathname);
   
   const response = await fetch("https://accounts.spotify.com/api/token", {
@@ -60,7 +71,11 @@ export async function handleCallback(code) {
   throw new Error("Failed to retrieve access token");
 }
 
-export function getToken() {
+export function hasSession() {
+  return Boolean(getToken());
+}
+
+function getToken() {
   const expiresAt = sessionStorage.getItem('spotify_token_expires_at');
   if (expiresAt && Number(expiresAt) <= Date.now()) {
     clearSession();

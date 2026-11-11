@@ -4,7 +4,10 @@ const pendingDrawKey = 'pending_random_draw';
 
 export function getPlayableCardIds(deck, provider) {
   const ids = new Set(deck.tracks.map(track => track.UniqueID));
-  return [...ids].filter(id => getTrackById(id)?.[provider]);
+  return [...ids].filter(id => {
+    const track = getTrackById(id);
+    return provider ? track?.[provider] : track?.spotify || track?.tidal;
+  });
 }
 
 export function openRandomCard(deck, candidates) {
