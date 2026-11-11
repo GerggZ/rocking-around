@@ -1,4 +1,4 @@
-import * as auth from './login/authenticate.js';
+import * as providers from './providers/index.js';
 import { getTrackById } from './tracks.js';
 import { getPlayableCardIds, openRandomCard, restoreRandomDeck } from './random-cards.js';
 
@@ -32,7 +32,7 @@ function updateProgressRing(positionMs, durationMs) {
 function startProgressLoop() {
   stopProgressLoop();
   async function loop() {
-    const state = await auth.getCurrentState();
+    const state = await providers.getCurrentState();
     if (state && !state.paused) {
       updateProgressRing(state.position, state.duration);
       animFrameId = requestAnimationFrame(loop);
@@ -71,7 +71,7 @@ function handlePlayerStateChange(state) {
 
 // --- MAIN APPLICATION ROUTER ---
 async function initApp() {
-  const authState = await auth.checkAuth();
+  const authState = await providers.checkAuth();
   const urlParams = new URLSearchParams(window.location.search);
   const songId = urlParams.get('song') || urlParams.get('card');
 
@@ -81,9 +81,9 @@ async function initApp() {
   const provider = authState.authenticated ? authState.provider : null;
   const openProviderMenu = renderProviderMenu({
     provider,
-    accounts: auth.providerAccounts(),
-    onSelect: auth.login,
-    onDisconnect: auth.logout
+    accounts: providers.providerAccounts(),
+    onSelect: providers.login,
+    onDisconnect: providers.logout
   });
 
   const randomDeck = restoreRandomDeck(songId);
@@ -103,7 +103,7 @@ async function initApp() {
     renderPlayerView(cardMount, trackData, nextCards.length ? async () => {
       if (trackStarted) {
         try {
-          await auth.pauseTrack();
+          await providers.pauseTrack();
         } catch (error) {
           console.error('Could not pause the current card:', error);
         }
@@ -126,10 +126,10 @@ async function initApp() {
       status.textContent = '';
       try {
         if (!trackStarted) {
-          await auth.playTrack(currentTrackId);
+          await providers.playTrack(currentTrackId);
           trackStarted = true;
         } else {
-          await auth.togglePlay();
+          await providers.togglePlay();
         }
       } catch (error) {
         status.textContent = error.message || 'Could not play this card. Please try again.';
@@ -156,7 +156,7 @@ async function initApp() {
     }
 
     // Clean SDK Initialization — Play button enables when player is ready!
-    await auth.initPlayer(
+    await providers.initPlayer(
       () => { 
         if (playBtn) playBtn.disabled = false; 
       },

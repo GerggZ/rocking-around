@@ -444,30 +444,6 @@ p {
   transform: translateY(-1px);
 }
 
-/* --- AUTH STATUS BADGE --- */
-.status-badge {
-  display: inline-block;
-  margin-bottom: 0.5rem;
-  padding: 0.2rem 0.65rem;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border-radius: 999px;
-}
-
-.status-badge.authenticated {
-  color: var(--leaf-green);
-  background: rgba(45, 106, 79, 0.12);
-  border: 1px solid rgba(45, 106, 79, 0.25);
-}
-
-.status-badge.unauthenticated {
-  color: var(--walnut-brown);
-  background: rgba(107, 68, 35, 0.12);
-  border: 1px solid rgba(107, 68, 35, 0.25);
-}
-
 @media (max-width: 450px) {
   .app-viewport { transform: scale(0.92); }
 }

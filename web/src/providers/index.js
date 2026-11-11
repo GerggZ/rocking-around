@@ -1,12 +1,16 @@
-import * as spotify from './authenticate_spotify.js';
-import * as tidal from './authenticate_tidal.js';
-import * as apple from './authenticate_apple.js';
+import * as spotify from './spotify.js';
+import * as tidal from './tidal.js';
+import * as apple from './apple.js';
 
 // Every provider module exports the same interface: requiresLogin, login,
 // logout, isCallback, handleCallback, hasSession, initPlayer, playTrack,
 // pauseTrack, togglePlay and getCurrentState. This router treats them all the
 // same way.
-const providers = { spotify, tidal, apple };
+// TIDAL is hidden until TIDAL allows this website to stream previews: its
+// audio servers currently refuse (403) audio requests from other websites.
+// Set to true to bring TIDAL back into the provider menu.
+const TIDAL_ENABLED = false;
+const providers = { spotify, ...(TIDAL_ENABLED ? { tidal } : {}), apple };
 let activeProvider = null;
 
 function active() {

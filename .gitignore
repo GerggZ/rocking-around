@@ -22,3 +22,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python tools (tools/)
+# Secrets and the Spotify login cache stay on this computer.
+tools/.env
+tools/.cache/
+# Personal Spotify export and generated card images (both can be regenerated).
+tools/data/
+tools/**/outputs/
+.venv/
+__pycache__/
+*.pyc

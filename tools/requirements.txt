@@ -1,0 +1,5 @@
+pandas
+spotipy
+python-dotenv
+qrcode[pil]==8.2
+tqdm
