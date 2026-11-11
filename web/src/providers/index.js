@@ -1,6 +1,6 @@
 import * as spotify from './spotify.js';
 import * as tidal from './tidal.js';
-import * as apple from './apple.js';
+import * as itunes from './itunes.js';
 
 // Every provider module exports the same interface: requiresLogin, login,
 // logout, isCallback, handleCallback, hasSession, initPlayer, playTrack,
@@ -10,7 +10,7 @@ import * as apple from './apple.js';
 // audio servers currently refuse (403) audio requests from other websites.
 // Set to true to bring TIDAL back into the provider menu.
 const TIDAL_ENABLED = false;
-const providers = { spotify, ...(TIDAL_ENABLED ? { tidal } : {}), apple };
+const providers = { spotify, ...(TIDAL_ENABLED ? { tidal } : {}), itunes };
 let activeProvider = null;
 
 function active() {

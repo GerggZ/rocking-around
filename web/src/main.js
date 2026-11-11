@@ -151,7 +151,7 @@ async function initApp() {
     }
 
     if (!currentTrackId) {
-      document.getElementById('status-msg').textContent = `This card has no ${{ spotify: 'Spotify', tidal: 'TIDAL', apple: 'Apple Music' }[provider]} track ID yet.`;
+      document.getElementById('status-msg').textContent = `This card has no ${{ spotify: 'Spotify', tidal: 'TIDAL', itunes: 'iTunes' }[provider]} track ID yet.`;
       return;
     }
 

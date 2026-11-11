@@ -30,7 +30,7 @@ for (const { tracks } of decks) {
     if (!existing) {
       recordings.set(track.UniqueID, { ...track });
     } else {
-      for (const provider of ['spotify', 'tidal', 'apple', 'youtube']) {
+      for (const provider of ['spotify', 'tidal', 'itunes', 'youtube']) {
         if (!existing[provider] && track[provider]) existing[provider] = track[provider];
       }
     }

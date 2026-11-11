@@ -6,7 +6,7 @@ export function getPlayableCardIds(deck, provider) {
   const ids = new Set(deck.tracks.map(track => track.UniqueID));
   return [...ids].filter(id => {
     const track = getTrackById(id);
-    return provider ? track?.[provider] : track?.spotify || track?.tidal || track?.apple;
+    return provider ? track?.[provider] : track?.spotify || track?.tidal || track?.itunes;
   });
 }
 
