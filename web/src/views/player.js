@@ -1,8 +1,6 @@
 export function renderPlayerView(container, trackData, onNextRandomCard) {
   container.innerHTML = `
     <div id="game-view" class="view-state">
-      <p id="status-msg"  class="status-msg"></p>
-
       <div class="player-wrapper">
         <svg class="progress-ring" width="110" height="110" viewBox="0 0 110 110">
           <circle stroke="rgba(0, 0, 0, 0.08)" stroke-width="4" fill="transparent" r="47" cx="55" cy="55"/>
@@ -14,6 +12,8 @@ export function renderPlayerView(container, trackData, onNextRandomCard) {
       </div>
 
       <button id="reveal-btn" class="action-btn">Reveal Track Info</button>
+
+      <p id="status-msg" class="status-msg" role="status"></p>
 
       <div class="answer-slot">
         <div id="answer-box" class="answer-card hidden">

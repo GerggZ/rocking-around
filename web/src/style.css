@@ -141,6 +141,33 @@ p {
   padding-top: 2rem;
 }
 
+/* Play messages ("Could not play…", "Choose a music provider…") float as
+   plain text just under the card's paper, in the empty space of the card
+   artwork. They overlay instead of taking up room, so showing or clearing one
+   never moves the play button or the buttons below the card. Long messages
+   are cut to two lines. */
+.status-msg {
+  position: absolute;
+  top: calc(100% - 1.6rem);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 260px;
+  margin: 0;
+  padding: 0;
+  color: var(--text-dark);
+  font-size: 0.75rem;
+  line-height: 1.25;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.status-msg:empty { display: none; }
+
 /* Player Ring */
 .player-wrapper {
   position: relative;
