@@ -12,6 +12,11 @@ const providerIcons = {
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
       <path d="m4.5 4 4 4-4 4-4-4Zm7.5 0 4 4-4 4-4-4Zm7.5 0 4 4-4 4-4-4ZM12 12l4 4-4 4-4-4Z"/>
     </svg>`,
+  apple: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="12" r="11" fill="currentColor"/>
+      <path d="M10 16.2a2 2 0 1 1-1.3-1.87V7.6l7-1.4v8.1a2 2 0 1 1-1.3-1.87V8.3L10 9.2Z" fill="var(--provider-icon-paper)"/>
+    </svg>`,
   none: `
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
       <path d="M9 18.5a3 3 0 1 1-2-2.83V5l12-2v12.5a3 3 0 1 1-2-2.83V6.4L9 7.9Z"/>
@@ -20,10 +25,11 @@ const providerIcons = {
 
 const providerInfo = {
   spotify: { name: 'Spotify', label: 'Spotify · Full tracks', detail: 'Full tracks · Spotify Premium required' },
-  tidal: { name: 'TIDAL', label: 'TIDAL · 30s previews', detail: '30-second previews · TIDAL account required' }
+  tidal: { name: 'TIDAL', label: 'TIDAL · 30s previews', detail: '30-second previews · TIDAL account required' },
+  apple: { name: 'Apple Music', label: 'Apple Music · 30s previews', detail: '30-second previews courtesy of iTunes · No account needed' }
 };
 
-function providerSection(name, provider, connected) {
+function providerSection(name, provider, { connected, requiresLogin }) {
   const info = providerInfo[name];
   const selected = provider === name;
   return `
@@ -32,11 +38,11 @@ function providerSection(name, provider, connected) {
         <p>${info.detail}</p>
         <button data-select="${name}" class="action-btn" type="button"
                 aria-pressed="${selected}">${selected ? 'Selected' : connected ? `Use ${info.name}` : `Connect ${info.name}`}</button>
-        ${connected ? `<button data-disconnect="${name}" class="provider-switch" type="button">Disconnect ${info.name}</button>` : ''}
+        ${connected && requiresLogin ? `<button data-disconnect="${name}" class="provider-switch" type="button">Disconnect ${info.name}</button>` : ''}
       </section>`;
 }
 
-export function renderProviderMenu({ provider, connected, onSelect, onDisconnect }) {
+export function renderProviderMenu({ provider, accounts, onSelect, onDisconnect }) {
   const mount = document.getElementById('provider-controls');
   const label = providerInfo[provider]?.label ?? 'Choose a music provider';
 
@@ -51,7 +57,7 @@ export function renderProviderMenu({ provider, connected, onSelect, onDisconnect
         <h2 id="provider-title">Music provider</h2>
         <button id="provider-close" class="provider-close" type="button" aria-label="Close music provider options" autofocus>×</button>
       </div>
-      ${Object.keys(providerInfo).map(name => providerSection(name, provider, connected[name])).join('')}
+      ${Object.keys(providerInfo).map(name => providerSection(name, provider, accounts[name])).join('')}
       <p id="provider-error" role="status"></p>
     </dialog>
   `;

@@ -82,7 +82,7 @@ export function renderDashboardView(container, providerName) {
 
     playableIds = getPlayableCardIds(deck, providerName);
     playButton.disabled = playableIds.length === 0;
-    status.textContent = playButton.disabled ? `This deck has no ${providerName === 'tidal' ? 'TIDAL ' : providerName === 'spotify' ? 'Spotify ' : ''}track IDs yet.` : '';
+    status.textContent = playButton.disabled ? `This deck has no ${{ spotify: 'Spotify ', tidal: 'TIDAL ', apple: 'Apple Music ' }[providerName] ?? ''}track IDs yet.` : '';
   }
 
   playButton.addEventListener('click', () => {

@@ -81,7 +81,7 @@ async function initApp() {
   const provider = authState.authenticated ? authState.provider : null;
   const openProviderMenu = renderProviderMenu({
     provider,
-    connected: auth.connectedProviders(),
+    accounts: auth.providerAccounts(),
     onSelect: auth.login,
     onDisconnect: auth.logout
   });
@@ -151,7 +151,7 @@ async function initApp() {
     }
 
     if (!currentTrackId) {
-      document.getElementById('status-msg').textContent = `This card has no ${{ spotify: 'Spotify', tidal: 'TIDAL' }[provider]} track ID yet.`;
+      document.getElementById('status-msg').textContent = `This card has no ${{ spotify: 'Spotify', tidal: 'TIDAL', apple: 'Apple Music' }[provider]} track ID yet.`;
       return;
     }
 

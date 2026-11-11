@@ -1,3 +1,5 @@
+export const requiresLogin = true;
+
 let player = null;
 let pendingCredentials = null;
 let playbackError = null;
@@ -11,31 +13,19 @@ const authorizeUrl = 'https://login.tidal.com/authorize';
 const tokenUrl = 'https://auth.tidal.com/v1/oauth2/token';
 const scopes = ['playback'];
 const sessionKey = 'tidal_session';
-// TIDAL's audio CDN refuses segment requests sent directly from a website
-// (403 when an Origin header is present). public/tidal-sw.js reroutes them to
-// this relay, which fetches them server-side (server/tidal-audio.js).
-const audioProxyUrl = import.meta.env.VITE_TIDAL_AUDIO_PROXY_URL || '/api/tidal/audio';
-let audioProxyReady = null;
-
-function ensureAudioProxy() {
-  if (audioProxyReady) return audioProxyReady;
-  audioProxyReady = (async () => {
-    if (!('serviceWorker' in navigator)) {
-      throw new Error('This browser cannot route TIDAL audio (service workers are unavailable).');
-    }
-    const proxy = new URL(audioProxyUrl, window.location.origin).href;
-    const base = import.meta.env.BASE_URL;
-    await navigator.serviceWorker.register(base + 'tidal-sw.js?proxy=' + encodeURIComponent(proxy), { scope: base });
-    await navigator.serviceWorker.ready;
-    if (navigator.serviceWorker.controller) return;
-    await new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error('The TIDAL audio relay did not start. Please reload the page.')), 5000);
-      navigator.serviceWorker.addEventListener('controllerchange', () => { clearTimeout(timer); resolve(); }, { once: true });
-      if (navigator.serviceWorker.controller) { clearTimeout(timer); resolve(); }
-    });
-  })();
-  audioProxyReady.catch(() => { audioProxyReady = null; });
-  return audioProxyReady;
+// Earlier versions routed TIDAL audio through a service worker and a relay
+// server. Audio now streams straight from TIDAL to the browser, so remove that
+// worker if a visitor's browser still has it.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(async registrations => {
+    const old = registrations.filter(registration =>
+      [registration.active, registration.waiting, registration.installing]
+        .some(worker => worker?.scriptURL.includes('tidal-sw.js')));
+    if (!old.length) return;
+    await Promise.all(old.map(registration => registration.unregister()));
+    // A worker still controlling this page keeps rerouting until a reload.
+    if (navigator.serviceWorker.controller?.scriptURL.includes('tidal-sw.js')) window.location.reload();
+  }).catch(() => {});
 }
 
 function readSession() {
@@ -200,7 +190,6 @@ export function getCurrentState() {
 export async function initPlayer(onReady, onError, onStateChange) {
   try {
     if (hasSession()) await getCredentials();
-    void ensureAudioProxy().catch(() => {});
     player = await import('@tidal-music/player');
     player.bootstrap({
       outputDevices: false,
@@ -246,7 +235,6 @@ export async function playTrack(trackId) {
   }
   if (!player) throw new Error('The TIDAL player is not ready yet.');
   if (!(await checkDrmSupport())) throw new Error(drmMessage);
-  await ensureAudioProxy();
   playbackError = null;
   let timeout;
   let timedOut = false;

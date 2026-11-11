@@ -1,10 +1,12 @@
 import * as spotify from './authenticate_spotify.js';
 import * as tidal from './authenticate_tidal.js';
+import * as apple from './authenticate_apple.js';
 
-// Every provider module exports the same functions: login, logout, isCallback,
-// handleCallback, hasSession, initPlayer, playTrack, pauseTrack, togglePlay
-// and getCurrentState. This router treats them all the same way.
-const providers = { spotify, tidal };
+// Every provider module exports the same interface: requiresLogin, login,
+// logout, isCallback, handleCallback, hasSession, initPlayer, playTrack,
+// pauseTrack, togglePlay and getCurrentState. This router treats them all the
+// same way.
+const providers = { spotify, tidal, apple };
 let activeProvider = null;
 
 function active() {
@@ -21,8 +23,11 @@ function openPendingCard() {
   return false;
 }
 
-export function connectedProviders() {
-  return Object.fromEntries(Object.entries(providers).map(([name, provider]) => [name, provider.hasSession()]));
+export function providerAccounts() {
+  return Object.fromEntries(Object.entries(providers).map(([name, provider]) => [name, {
+    connected: provider.hasSession(),
+    requiresLogin: provider.requiresLogin
+  }]));
 }
 
 export async function login(name) {

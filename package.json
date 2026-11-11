@@ -9,8 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
-    "start:tidal": "node --env-file-if-exists=.env server/tidal-server.js"
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
     "gh-pages": "^6.1.1",

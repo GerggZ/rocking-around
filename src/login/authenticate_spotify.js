@@ -1,3 +1,5 @@
+export const requiresLogin = true;
+
 const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const REDIRECT_URI = window.location.origin + window.location.pathname;
 
