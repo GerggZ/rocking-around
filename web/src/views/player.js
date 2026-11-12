@@ -1,4 +1,6 @@
-export function renderPlayerView(container, trackData, onNextRandomCard) {
+import { ICONS } from '../icons.js';
+
+export function renderPlayerView(container, trackData, { onNext, onBack }) {
   container.innerHTML = `
     <div id="game-view" class="view-state">
       <div class="player-wrapper">
@@ -8,7 +10,7 @@ export function renderPlayerView(container, trackData, onNextRandomCard) {
           <circle id="progress-dot" class="progress-ring__dot" r="4" cx="55" cy="8"/>
         </svg>
 
-        <button id="play-pause-btn" class="play-btn" disabled>▶</button>
+        <button id="play-pause-btn" class="play-btn" aria-label="Play" disabled>${ICONS.play}</button>
       </div>
 
       <button id="reveal-btn" class="action-btn">Reveal Track Info</button>
@@ -19,7 +21,7 @@ export function renderPlayerView(container, trackData, onNextRandomCard) {
         <div id="answer-box" class="answer-card hidden">
           <h4 id="track-title"></h4>
           <p id="track-artist"></p>
-          <p id="track-album" style="color: var(--text-subtle); font-size: 0.78rem;"></p>
+          <p id="track-album"></p>
           <div id="track-year" class="year-badge"></div>
         </div>
       </div>
@@ -34,20 +36,18 @@ export function renderPlayerView(container, trackData, onNextRandomCard) {
   const externalSection = document.getElementById('external-content');
   if (externalSection) {
     externalSection.innerHTML = `
-      ${onNextRandomCard ? '<button id="next-random-card" class="action-btn" type="button">Next Random Card</button>' : ''}
+      ${onNext ? '<button id="next-random-card" class="action-btn" type="button">Next Random Card</button>' : ''}
       <button id="back-home-btn" class="outer-back-btn">← Back to Menu</button>
     `;
     const nextButton = externalSection.querySelector('#next-random-card');
     nextButton?.addEventListener('click', async () => {
       nextButton.disabled = true;
       try {
-        await onNextRandomCard();
+        await onNext();
       } finally {
         nextButton.disabled = false;
       }
     });
-    document.getElementById('back-home-btn')?.addEventListener('click', () => {
-      window.location.href = import.meta.env.BASE_URL;
-    });
+    document.getElementById('back-home-btn')?.addEventListener('click', () => onBack());
   }
 }

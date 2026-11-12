@@ -4,7 +4,7 @@ import * as itunes from './itunes.js';
 
 // Every provider module exports the same interface: requiresLogin, login,
 // logout, isCallback, handleCallback, hasSession, initPlayer, playTrack,
-// pauseTrack, togglePlay and getCurrentState. This router treats them all the
+// pauseTrack, togglePlay and getCurrentState (unlockAudio is optional). This router treats them all the
 // same way.
 // TIDAL is hidden until TIDAL allows this website to stream previews: its
 // audio servers currently refuse (403) audio requests from other websites.
@@ -86,14 +86,20 @@ export async function checkAuth() {
     : { authenticated: false, provider: null };
 }
 
-export async function initPlayer(onReady, onError, onStateChange) {
+export async function initPlayer(onReady, onError, onStateChange, onAutoplayBlocked) {
   if (!active()) return;
   // Without a login there is nothing to connect yet; pressing Play signs in.
   if (!active().hasSession()) {
     onReady();
     return;
   }
-  await active().initPlayer(onReady, onError, onStateChange);
+  await active().initPlayer(onReady, onError, onStateChange, onAutoplayBlocked);
+}
+
+// Call from inside a tap/click/key handler. Lets later tracks start without
+// another tap, which browsers otherwise require for every new page.
+export function unlockAudio() {
+  active()?.unlockAudio?.();
 }
 
 export async function playTrack(trackId) {

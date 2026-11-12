@@ -5,6 +5,7 @@ const REDIRECT_URI = window.location.origin + window.location.pathname;
 
 let spotifyPlayer = null;
 let spotifyDeviceId = null;
+let audioActivated = false;
 
 function generateRandomString(length) {
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
@@ -114,7 +115,7 @@ function loadSDK() {
   });
 }
 
-export async function initPlayer(onReady, onError, onStateChange) {
+export async function initPlayer(onReady, onError, onStateChange, onAutoplayBlocked) {
   await loadSDK();
 
   spotifyPlayer = new Spotify.Player({
@@ -135,6 +136,9 @@ export async function initPlayer(onReady, onError, onStateChange) {
   spotifyPlayer.addListener('player_state_changed', (state) => {
     if (onStateChange) onStateChange(state);
   });
+
+  // The browser refused to start audio without a tap; the track stays loaded.
+  spotifyPlayer.addListener('autoplay_failed', () => onAutoplayBlocked?.());
 
   spotifyPlayer.addListener('authentication_error', returnToSignIn);
   spotifyPlayer.addListener('initialization_error', ({ message }) => onError(message));
@@ -161,6 +165,14 @@ export async function playTrack(trackId) {
     }
   });
   if (response.status === 401) returnToSignIn();
+}
+
+// Must run inside a tap/click handler. Once activated, the SDK's audio can
+// start later without another tap (Spotify's answer to browser autoplay rules).
+export function unlockAudio() {
+  if (audioActivated || !spotifyPlayer?.activateElement) return;
+  audioActivated = true;
+  spotifyPlayer.activateElement().catch(() => { audioActivated = false; });
 }
 
 export async function pauseTrack() {

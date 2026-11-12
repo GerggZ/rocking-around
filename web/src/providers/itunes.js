@@ -8,6 +8,41 @@ export const requiresLogin = false;
 const lookupUrl = 'https://itunes.apple.com/lookup';
 const previewCache = new Map();
 let audio = null;
+let audioUnlocked = false;
+let silentUrl = null;
+let playRequest = 0;
+
+// A fraction of a second of silence. Playing it once during a tap unlocks the
+// audio element, so later previews can start without another tap (iOS Safari).
+function getSilentUrl() {
+  if (silentUrl) return silentUrl;
+  const samples = 800;
+  const buffer = new ArrayBuffer(44 + samples);
+  const view = new DataView(buffer);
+  const text = (offset, value) => [...value].forEach((char, i) => view.setUint8(offset + i, char.charCodeAt(0)));
+  text(0, 'RIFF'); view.setUint32(4, 36 + samples, true); text(8, 'WAVE');
+  text(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+  view.setUint32(24, 8000, true); view.setUint32(28, 8000, true); view.setUint16(32, 1, true); view.setUint16(34, 8, true);
+  text(36, 'data'); view.setUint32(40, samples, true);
+  for (let i = 0; i < samples; i++) view.setUint8(44 + i, 128);
+  silentUrl = URL.createObjectURL(new Blob([buffer], { type: 'audio/wav' }));
+  return silentUrl;
+}
+
+function isSilent() {
+  return Boolean(silentUrl) && audio?.src === silentUrl;
+}
+
+export function unlockAudio() {
+  if (audioUnlocked || !audio) return;
+  // A real preview is already loaded: its own play() call unlocks the element.
+  if (audio.getAttribute('src') && !isSilent()) return;
+  audioUnlocked = true;
+  audio.src = getSilentUrl();
+  audio.play()
+    .then(() => { if (isSilent()) audio.pause(); })
+    .catch(() => { audioUnlocked = false; });
+}
 
 export async function login() {}
 export function logout() {}
@@ -45,7 +80,7 @@ async function getPreviewUrl(trackId) {
 }
 
 export function getCurrentState() {
-  if (!audio) return null;
+  if (!audio || isSilent()) return null;
   return {
     paused: audio.paused,
     position: audio.currentTime * 1000,
@@ -59,8 +94,9 @@ export async function initPlayer(onReady, onError, onStateChange) {
   for (const type of ['play', 'pause', 'ended', 'loadedmetadata']) {
     audio.addEventListener(type, () => onStateChange(getCurrentState()));
   }
+  audio.addEventListener('playing', () => { audioUnlocked = true; });
   audio.addEventListener('error', () => {
-    if (audio.getAttribute('src')) onError('This iTunes preview could not play. Please try again.');
+    if (audio.getAttribute('src') && !isSilent()) onError('This iTunes preview could not play. Please try again.');
   });
   onReady();
 }
@@ -70,17 +106,23 @@ export async function playTrack(trackId) {
     throw new Error('This card needs a numeric iTunes track ID.');
   }
   if (!audio) throw new Error('The iTunes player is not ready yet.');
-  audio.src = await getPreviewUrl(String(trackId));
+  const request = ++playRequest;
+  const url = await getPreviewUrl(String(trackId));
+  // Another card was opened while this one was still looking up its preview.
+  if (request !== playRequest) return;
+  audio.src = url;
   await audio.play();
 }
 
 export async function pauseTrack() {
+  playRequest++;
   audio?.pause();
 }
 
 export async function togglePlay() {
   if (!audio) return;
   if (audio.paused) {
+    if (isSilent()) return;
     if (audio.ended) audio.currentTime = 0;
     await audio.play();
   } else {

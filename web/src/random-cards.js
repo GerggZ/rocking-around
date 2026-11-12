@@ -1,7 +1,5 @@
 import { decks, getTrackById } from './tracks.js';
 
-const pendingDrawKey = 'pending_random_draw';
-
 export function getPlayableCardIds(deck, provider) {
   const ids = new Set(deck.tracks.map(track => track.UniqueID));
   return [...ids].filter(id => {
@@ -10,22 +8,19 @@ export function getPlayableCardIds(deck, provider) {
   });
 }
 
-export function openRandomCard(deck, candidates) {
-  const song = candidates[Math.floor(Math.random() * candidates.length)];
-  sessionStorage.setItem(pendingDrawKey, new URLSearchParams({ song, deck: deck.id }).toString());
-  window.location.href = '?' + new URLSearchParams({ song });
+export function pickRandomCard(candidates) {
+  return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
-export function restoreRandomDeck(songId) {
-  const pending = new URLSearchParams(sessionStorage.getItem(pendingDrawKey));
-  sessionStorage.removeItem(pendingDrawKey);
-
-  if (songId && pending.get('song') === songId) {
-    window.history.replaceState({ ...window.history.state, randomDeckId: pending.get('deck') }, '');
-  }
-
+export function findDeckForCard(deckId, songId) {
   return decks.find(deck =>
-    deck.id === window.history.state?.randomDeckId &&
+    deck.id === deckId &&
     deck.tracks.some(track => track.UniqueID === songId)
-  );
+  ) ?? null;
+}
+
+// The deck a random card came from is kept in the browser history entry, so
+// "Next Random Card" still works after a reload or Back/Forward.
+export function restoreRandomDeck(songId) {
+  return findDeckForCard(window.history.state?.randomDeckId, songId);
 }

@@ -12,7 +12,15 @@
 
   --walnut-brown: #6b4423;
   --scrollbar-brown: rgba(107, 68, 35, 0.5); /* walnut brown at 50% */
-  --amber-sun: #d97724;
+  /* Buttercup track info card */
+  --song-info-background: #fffae6;
+  --song-info-border: #f3e5ae;
+  --song-info-accent: #eec04c;
+  --song-info-emphasis: #4a3610;
+  --song-info-text: #77592a;
+  --song-info-subtle: #a38a5a;
+  --song-info-badge: #fbe7a6;
+  --song-info-badge-text: #5a4110;
 
   --text-dark: #1b281f;
   --text-muted: #52473d;
@@ -205,7 +213,7 @@ p {
   z-index: 2;
   width: 64px;
   height: 64px;
-  padding: 0 0 0 2px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -217,6 +225,11 @@ p {
   box-shadow: 0 5px 14px var(--leaf-glow);
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.play-btn svg {
+  width: 26px;
+  height: 26px;
 }
 
 .play-btn:hover { 
@@ -235,27 +248,35 @@ p {
   width: 100%;
   padding: 0.65rem 0.85rem;
   text-align: left;
-  background: var(--surface-inset);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--amber-sun);
+  background: var(--song-info-background);
+  border: 1px solid var(--song-info-border);
+  border-left: 4px solid var(--song-info-accent);
   border-radius: 0.6rem;
 }
 
 .answer-card h4 {
   margin: 0 0 0.15rem 0;
   font-size: 0.88rem;
-  color: var(--text-dark);
+  color: var(--song-info-emphasis);
 }
 
 .answer-card p {
   margin: 0;
   font-size: 0.78rem;
+  color: var(--song-info-text);
+}
+
+.answer-card #track-album {
+  color: var(--song-info-subtle);
 }
 
 .year-badge {
   display: inline-block;
   margin-top: 0.25rem;
-  color: var(--amber-sun);
+  padding: 0.05rem 0.6rem;
+  border-radius: 999px;
+  background: var(--song-info-badge);
+  color: var(--song-info-badge-text);
   font-size: 0.85rem;
   font-weight: 750;
 }
@@ -275,6 +296,14 @@ p {
   box-shadow: 0 4px 12px var(--leaf-glow);
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.action-btn:focus {
+  outline: none;
+}
+
+.action-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(238, 192, 76, 0.35);
 }
 
 .action-btn:hover {
@@ -498,8 +527,8 @@ p {
   z-index: 10;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   padding: 0;
   color: var(--walnut-brown);
   font-size: 0.8rem;
@@ -596,12 +625,40 @@ body:has(.provider-dialog[open]) {
 }
 
 .provider-control {
-  background: var(--provider-icon-paper);
+  --provider-icon-paper: var(--leaf-green);
+  color: var(--text-on-green);
+  background: var(--leaf-green);
+  border: 0;
+  box-shadow: 0 4px 12px var(--leaf-glow);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.provider-control:hover {
+  background: var(--leaf-green-hover);
+  box-shadow: 0 6px 16px rgba(45, 106, 79, 0.3);
+  transform: translateY(-1px);
 }
 
 .provider-control svg {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Spotify and iTunes: the round logo is the whole button. */
+.provider-control--logo {
+  --provider-icon-paper: #fff2d1;
+  color: var(--leaf-green);
+  background: transparent;
+}
+
+.provider-control--logo:hover {
+  color: var(--leaf-green-hover);
+  background: transparent;
+}
+
+.provider-control--logo svg {
+  width: 41px;
+  height: 41px;
 }
 
 .provider-option h3 {

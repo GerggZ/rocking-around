@@ -1,7 +1,7 @@
 import { decks, getTrackById } from '../tracks.js';
-import { getPlayableCardIds, openRandomCard } from '../random-cards.js';
+import { getPlayableCardIds, pickRandomCard } from '../random-cards.js';
 
-export function renderDashboardView(container, providerName) {
+export function renderDashboardView(container, providerName, { onOpenCard }) {
   // Render Card Content
   container.innerHTML = `
     <div id="dashboard-view" class="view-state">
@@ -60,7 +60,7 @@ export function renderDashboardView(container, providerName) {
       return;
     }
 
-    window.location.href = '?' + new URLSearchParams({ song: track.UniqueID });
+    onOpenCard(track.UniqueID);
   });
 
   const picker = trackSection.querySelector('.deck-picker');
@@ -87,7 +87,7 @@ export function renderDashboardView(container, providerName) {
 
   playButton.addEventListener('click', () => {
     if (playButton.disabled) return;
-    openRandomCard(selectedDeck, playableIds);
+    onOpenCard(pickRandomCard(playableIds), selectedDeck);
   });
 
   function closePicker() {
