@@ -1,32 +1,48 @@
-import { ICONS } from '../icons.js';
+import { playerMarkup, resetPlayerProgress } from './player-visual.js';
+import { REVEAL_STYLE } from '../config.js';
+
+// The track info, in either style (see REVEAL_STYLE in config.js). Both keep
+// the same ids, so main.js fills them in and opens them the same way.
+const answerMarkup = () => REVEAL_STYLE === 'insert' ? `
+      <div id="answer-slot" class="answer-slot answer-slot--insert">
+        <div id="answer-reveal" class="answer-reveal" inert>
+          <div class="insert-clip">
+            <div id="answer-box" class="insert-card">
+              <span id="track-title" class="insert-title"></span>
+              <div class="insert-row">
+                <span id="track-artist"></span>
+                <span id="track-year" class="insert-year"></span>
+              </div>
+              <span id="track-album"></span>
+            </div>
+          </div>
+        </div>
+      </div>` : `
+      <div id="answer-slot" class="answer-slot">
+        <div id="answer-reveal" class="answer-reveal" inert>
+          <div id="answer-box" class="answer-card">
+            <h4 id="track-title"></h4>
+            <p id="track-artist"></p>
+            <p id="track-album"></p>
+            <div id="track-year" class="year-badge"></div>
+          </div>
+        </div>
+      </div>`;
 
 export function renderPlayerView(container, trackData, { onNext, onBack }) {
   container.innerHTML = `
     <div id="game-view" class="view-state">
-      <div class="player-wrapper">
-        <svg class="progress-ring" width="110" height="110" viewBox="0 0 110 110">
-          <circle stroke="rgba(0, 0, 0, 0.08)" stroke-width="4" fill="transparent" r="47" cx="55" cy="55"/>
-          <circle id="progress-fill" class="progress-ring__fill" stroke-width="4" fill="transparent" r="47" cx="55" cy="55"/>
-          <circle id="progress-dot" class="progress-ring__dot" r="4" cx="55" cy="8"/>
-        </svg>
+      ${playerMarkup()}
 
-        <button id="play-pause-btn" class="play-btn" aria-label="Play" disabled>${ICONS.play}</button>
-      </div>
-
-      <button id="reveal-btn" class="action-btn">Reveal Track Info</button>
+      <button id="reveal-btn" class="action-btn" aria-expanded="false" aria-controls="answer-reveal">Reveal Track Info</button>
 
       <p id="status-msg" class="status-msg" role="status"></p>
 
-      <div class="answer-slot">
-        <div id="answer-box" class="answer-card hidden">
-          <h4 id="track-title"></h4>
-          <p id="track-artist"></p>
-          <p id="track-album"></p>
-          <div id="track-year" class="year-badge"></div>
-        </div>
-      </div>
+      ${answerMarkup()}
     </div>
   `;
+
+  resetPlayerProgress();
 
   for (const field of ['title', 'artist', 'album', 'year']) {
     container.querySelector(`#track-${field}`).textContent = trackData[field];

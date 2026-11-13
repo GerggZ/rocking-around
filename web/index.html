@@ -6,6 +6,11 @@
   <link rel="icon" href="data:,">
   <title>RockingAround Web Dashboard</title>
   <link rel="stylesheet" href="/src/style.css" />
+  <script>
+    // Opened straight onto a card (camera-app scan or a shared link): keep the
+    // card out of sight until it drops in, instead of showing an empty frame.
+    if (/[?&](song|card)=/.test(location.search)) document.documentElement.classList.add('arriving');
+  </script>
 </head>
 <body>
 

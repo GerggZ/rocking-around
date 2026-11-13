@@ -83,6 +83,7 @@ export function getCurrentState() {
   if (!audio || isSilent()) return null;
   return {
     paused: audio.paused,
+    ended: audio.ended,
     position: audio.currentTime * 1000,
     duration: (Number.isFinite(audio.duration) ? audio.duration : 30) * 1000
   };

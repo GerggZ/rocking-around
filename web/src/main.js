@@ -5,11 +5,13 @@ import { getPlayableCardIds, pickRandomCard, findDeckForCard } from './random-ca
 import { renderProviderMenu } from './views/provider-menu.js';
 import { renderDashboardView } from './views/dashboard.js';
 import { renderPlayerView } from './views/player.js';
+import { setPlayerIcon, setPlayerProgress } from './views/player-visual.js';
 import { renderScanButton } from './views/scanner.js';
-import { ICONS } from './icons.js';
 
 const cardMount = document.getElementById('card-mount');
 const externalMount = document.getElementById('external-content');
+const cardBoard = document.querySelector('.card-board');
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 // Remembered across cards (and QR-scan reloads) until the player presses play.
 const pausedKey = 'playback_paused';
@@ -45,19 +47,18 @@ for (const type of ['pointerdown', 'pointerup', 'touchend', 'keydown']) {
   document.addEventListener(type, () => providers.unlockAudio(), { capture: true });
 }
 
+// Focus rings are for keyboard users: Tab turns them on, a tap or click turns
+// them off again (see .keyboard-nav in style.css).
+document.addEventListener('keydown', event => {
+  if (event.key === 'Tab') document.documentElement.classList.add('keyboard-nav');
+});
+document.addEventListener('pointerdown', () => {
+  document.documentElement.classList.remove('keyboard-nav');
+});
+
 // --- PROGRESS RING LOOP ---
 function updateProgressRing(positionMs, durationMs) {
-  const fill = document.getElementById('progress-fill');
-  const dot = document.getElementById('progress-dot');
-  if (!durationMs || durationMs === 0 || !fill || !dot) return;
-
-  const progress = Math.min(positionMs / durationMs, 1);
-  const offset = 295.3 - (progress * 295.3);
-  fill.style.strokeDashoffset = offset;
-
-  const angle = progress * 2 * Math.PI;
-  dot.setAttribute('cx', (55 + 47 * Math.sin(angle)).toFixed(2));
-  dot.setAttribute('cy', (55 - 47 * Math.cos(angle)).toFixed(2));
+  setPlayerProgress(positionMs, durationMs);
 }
 
 function startProgressLoop() {
@@ -88,15 +89,13 @@ function handlePlayerStateChange(state) {
 
   if (playBtn) {
     if (isPlaying) {
-      playBtn.innerHTML = ICONS.pause;
-      playBtn.setAttribute('aria-label', 'Pause');
+      setPlayerIcon(playBtn, true);
       setStatus('');
       startProgressLoop();
     } else {
-      playBtn.innerHTML = ICONS.play;
-      playBtn.setAttribute('aria-label', 'Play');
+      setPlayerIcon(playBtn, false);
       stopProgressLoop();
-      updateProgressRing(state.position, state.duration);
+      updateProgressRing(state.ended ? 0 : state.position, state.duration);
     }
   }
 }
@@ -170,7 +169,8 @@ function showCard(songId, deck, { autoplay = true } = {}) {
 
   const playBtn = document.getElementById('play-pause-btn');
   const revealBtn = document.getElementById('reveal-btn');
-  const answerBox = document.getElementById('answer-box');
+  const answerSlot = document.getElementById('answer-slot');
+  const answerReveal = document.getElementById('answer-reveal');
 
   playBtn?.addEventListener('click', async () => {
     if (!provider) {
@@ -195,9 +195,38 @@ function showCard(songId, deck, { autoplay = true } = {}) {
     }
   });
 
+  // The track info grows out of the Reveal button and folds back into it
+  // (see .answer-slot in style.css). The motion needs to know where the button
+  // is relative to the info card, and how big it is.
+  function aimAnswerAtButton() {
+    const card = answerReveal.firstElementChild;
+    const button = revealBtn.getBoundingClientRect();
+    const box = answerReveal.getBoundingClientRect();
+    // Screen positions include any page scaling; the motion works in the
+    // card's own unscaled pixels.
+    const scale = box.width / answerReveal.offsetWidth || 1;
+    // Shrinks to exactly the button's pill shape, rounded like the button.
+    const width = revealBtn.offsetWidth;
+    const height = revealBtn.offsetHeight;
+    const scaleX = width / (card.offsetWidth || width);
+    const scaleY = height / (card.offsetHeight || height);
+    const radius = Math.min(parseFloat(getComputedStyle(revealBtn).borderTopLeftRadius) || 0, height / 2);
+    card.style.setProperty('--origin-x', `${(button.left + button.width / 2 - box.left) / scale}px`);
+    card.style.setProperty('--origin-y', `${(button.top + button.height / 2 - box.top) / scale}px`);
+    card.style.setProperty('--ball-x', String(scaleX));
+    card.style.setProperty('--ball-y', String(scaleY));
+    // Undo the squash on the corners, so they match the button once shrunk.
+    card.style.setProperty('--pill-radius', `${radius / scaleX}px / ${radius / scaleY}px`);
+    // Apply the new aim before toggling, so the motion starts from it.
+    void getComputedStyle(card).transform;
+  }
+
   revealBtn?.addEventListener('click', () => {
-    const isHidden = answerBox.classList.toggle('hidden');
-    revealBtn.textContent = isHidden ? 'Reveal Track Info' : 'Hide Track Info';
+    aimAnswerAtButton();
+    const isOpen = answerSlot.classList.toggle('is-open');
+    answerReveal.inert = !isOpen;
+    revealBtn.setAttribute('aria-expanded', String(isOpen));
+    revealBtn.textContent = isOpen ? 'Hide Track Info' : 'Reveal Track Info';
   });
 
   const willPlay = Boolean(provider && currentTrackId && autoplay && !userPaused());
@@ -231,17 +260,127 @@ function showDashboard() {
   renderDashboardView(cardMount, provider, { onOpenCard: goToCard });
 }
 
+// --- CARD TRANSITIONS ---
+// Everything done inside the app turns the card over with a flip, in a random
+// direction. Arriving from outside (a phone's camera app or a shared link)
+// drops the card onto the table instead.
+//
+// A flip takes the old card away, the new card is drawn while it is edge-on,
+// then it turns face up. Tapping again mid-flip skips to the newest card.
+let transitionToken = 0;
+let lastFlip = null;
+
+// Left/right turn around the vertical axis, up/down around the horizontal one.
+const FLIPS = {
+  left: { axis: 'Y', sign: -1 },
+  right: { axis: 'Y', sign: 1 },
+  up: { axis: 'X', sign: 1 },
+  down: { axis: 'X', sign: -1 }
+};
+
+function pickFlip() {
+  const options = Object.keys(FLIPS).filter(name => name !== lastFlip);
+  lastFlip = options[Math.floor(Math.random() * options.length)];
+  return FLIPS[lastFlip];
+}
+
+function flipFrame(axis, degrees, scale = 1) {
+  return { transform: `perspective(1400px) rotate${axis}(${degrees}deg)${scale === 1 ? '' : ` scale(${scale})`}` };
+}
+
+const MOTIONS = {
+  // Turns over like a card, in a random direction.
+  flip() {
+    const { axis, sign } = pickFlip();
+    return {
+      out: [[flipFrame(axis, 0), flipFrame(axis, sign * 90, 0.96)],
+        { duration: 220, easing: 'cubic-bezier(0.55, 0, 0.9, 0.5)' }],
+      in: [[
+        flipFrame(axis, -sign * 90, 0.96),
+        { ...flipFrame(axis, sign * 6), offset: 0.75 },
+        flipFrame(axis, 0)
+      ], { duration: 380, easing: 'cubic-bezier(0.2, 0.8, 0.3, 1)' }]
+    };
+  },
+
+  // A card arriving from outside drops onto the table (entrance only).
+  drop() {
+    return {
+      in: [[
+        { transform: 'translateY(-70px) scale(1.14)', opacity: 0 },
+        { transform: 'translateY(0) scale(0.97)', opacity: 1, offset: 0.62 },
+        { transform: 'translateY(-4px) scale(1.01)', offset: 0.82 },
+        { transform: 'none', opacity: 1 }
+      ], { duration: 440, easing: 'cubic-bezier(0.4, 0, 0.6, 1)' }]
+    };
+  }
+};
+
+// Plays only the second half of a motion on what is already showing.
+function playEntrance(kind) {
+  // The card was kept hidden while the app started; the entrance reveals it.
+  document.documentElement.classList.remove('arriving');
+  if (!cardBoard?.animate) return;
+  if (reducedMotion.matches) {
+    cardBoard.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' });
+    return;
+  }
+  const [frames, timing] = MOTIONS[kind]().in;
+  cardBoard.animate(frames, { ...timing, fill: 'backwards' });
+  externalMount?.animate(
+    [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
+    { duration: 320, delay: 200, easing: 'ease-out', fill: 'backwards' }
+  );
+}
+
+async function transitionCard(render, kind = 'flip') {
+  const token = ++transitionToken;
+  if (!cardBoard || !cardBoard.animate) {
+    render();
+    return;
+  }
+
+  if (reducedMotion.matches) {
+    render();
+    cardMount.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' });
+    externalMount?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' });
+    return;
+  }
+
+  const motion = (MOTIONS[kind] ?? MOTIONS.flip)();
+  const [outFrames, outTiming] = motion.out;
+  const [inFrames, inTiming] = motion.in;
+
+  const fadeOut = externalMount?.animate(
+    [{ opacity: 1 }, { opacity: 0 }],
+    { duration: 180, easing: 'ease-in', fill: 'forwards' }
+  );
+  const leave = cardBoard.animate(outFrames, { ...outTiming, fill: 'forwards' });
+  await leave.finished.catch(() => {});
+  if (token !== transitionToken) return;
+
+  render();
+  leave.cancel();
+  fadeOut?.cancel();
+
+  cardBoard.animate(inFrames, inTiming);
+  externalMount?.animate(
+    [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
+    { duration: 320, delay: 120, easing: 'ease-out', fill: 'backwards' }
+  );
+}
+
 // Card changes happen in place (no page reload), so the tap that opened the
 // card still counts as permission to start its music.
 function goToCard(songId, deck = null) {
   window.history.pushState({ randomDeckId: deck?.id ?? null }, '', '?' + new URLSearchParams({ song: songId }));
-  window.scrollTo({ top: 0 });
-  showCard(songId, deck);
+  window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+  transitionCard(() => showCard(songId, deck));
 }
 
 function goHome() {
   window.history.pushState({}, '', import.meta.env.BASE_URL);
-  showDashboard();
+  transitionCard(showDashboard);
 }
 
 function currentSongParam() {
@@ -251,13 +390,19 @@ function currentSongParam() {
 
 window.addEventListener('popstate', () => {
   const songId = currentSongParam();
-  if (songId) showCard(songId);
-  else showDashboard();
+  transitionCard(songId ? () => showCard(songId) : showDashboard);
 });
 
 // --- MAIN APPLICATION ROUTER ---
 async function initApp() {
-  const authState = await providers.checkAuth();
+  let authState;
+  try {
+    authState = await providers.checkAuth();
+  } catch (error) {
+    // Never leave the card hidden if signing in fails.
+    document.documentElement.classList.remove('arriving');
+    throw error;
+  }
   const songId = currentSongParam();
 
   // Clear External Mount Zone
@@ -277,8 +422,19 @@ async function initApp() {
   // Connect early, so the first card can start as soon as someone taps.
   if (provider) startPlayer();
 
-  if (songId) showCard(songId);
-  else showDashboard();
+  if (songId) {
+    // Arrived straight on a card (camera-app scan or a shared link). Wait for
+    // the card artwork (briefly) so it doesn't land half-drawn.
+    showCard(songId);
+    const artwork = cardBoard?.querySelector('.frame-bg');
+    await Promise.race([
+      artwork?.decode?.().catch(() => {}),
+      new Promise(resolve => setTimeout(resolve, 1200))
+    ]);
+    playEntrance('drop');
+  } else {
+    showDashboard();
+  }
 }
 
 // Start the Application

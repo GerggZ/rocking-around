@@ -1,4 +1,5 @@
 import { providerIcon } from '../icons.js';
+import { showDialogFrom } from './dialog-motion.js';
 
 // These logos are already a circle, so they become the button themselves
 // instead of sitting inside a second green circle.
@@ -47,7 +48,7 @@ export function renderProviderMenu({ provider, accounts, onSelect, onDisconnect 
   const dialog = mount.querySelector('#provider-dialog');
   const close = () => dialog.close();
   const open = () => {
-    if (!dialog.open) dialog.showModal();
+    if (!dialog.open) showDialogFrom(dialog, trigger);
   };
   trigger.addEventListener('click', open);
   mount.querySelector('#provider-close').addEventListener('click', close);

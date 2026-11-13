@@ -1,5 +1,6 @@
 import { ICONS } from '../icons.js';
 import { getTrackById } from '../tracks.js';
+import { showDialogFrom, closeDialog } from './dialog-motion.js';
 
 // Scanning inside the app (instead of with the phone's camera app) keeps the
 // game in one tab, and the tap on the scan button counts as permission for
@@ -89,13 +90,21 @@ export function renderScanButton({ onCard }) {
     <dialog id="scan-dialog" class="provider-dialog scan-dialog" aria-labelledby="scan-title">
       <div class="provider-dialog-heading">
         <h2 id="scan-title">Scan a card</h2>
-        <button id="scan-close" class="provider-close" type="button" aria-label="Close the scanner">×</button>
+        <button id="scan-close" class="provider-close" type="button" aria-label="Close the scanner" autofocus>×</button>
       </div>
       <div class="scan-viewport">
         <video id="scan-video" muted playsinline></video>
         <div class="scan-frame" aria-hidden="true"></div>
       </div>
       <p id="scan-status" class="scan-status" role="status"></p>
+      <form id="scan-code-form" class="card-lookup scan-code-form" novalidate>
+        <div class="card-lookup-controls">
+          <input id="scan-code-input" type="text" placeholder="Card code" aria-label="Card code"
+                 autocomplete="off" autocapitalize="none" spellcheck="false"
+                 aria-describedby="scan-status">
+          <button class="action-btn" type="submit">Open</button>
+        </div>
+      </form>
     </dialog>
   `;
 
@@ -103,6 +112,8 @@ export function renderScanButton({ onCard }) {
   const dialog = mount.querySelector('#scan-dialog');
   const video = mount.querySelector('#scan-video');
   const status = mount.querySelector('#scan-status');
+  const codeForm = mount.querySelector('#scan-code-form');
+  const codeInput = mount.querySelector('#scan-code-input');
   let stream = null;
   let session = 0;
 
@@ -114,6 +125,13 @@ export function renderScanButton({ onCard }) {
 
   const close = () => dialog.close();
 
+  // Let the scanner finish shrinking away first, so the new card's entrance
+  // isn't hidden behind it.
+  async function openFound(id) {
+    await closeDialog(dialog);
+    onCard(id);
+  }
+
   async function scanLoop(detect, current) {
     let lastMiss = '';
     while (current === session) {
@@ -124,8 +142,7 @@ export function renderScanButton({ onCard }) {
         if (text) {
           const id = cardIdFromCode(text);
           if (id) {
-            close();
-            onCard(id);
+            openFound(id);
             return;
           }
           if (text !== lastMiss) {
@@ -141,8 +158,10 @@ export function renderScanButton({ onCard }) {
   async function open() {
     if (dialog.open) return;
     const current = ++session;
-    dialog.showModal();
-    status.textContent = 'Starting the camera\u2026';
+    showDialogFrom(dialog, trigger);
+    status.textContent = '';
+    codeInput.value = '';
+    codeInput.removeAttribute('aria-invalid');
 
     if (!navigator.mediaDevices?.getUserMedia) {
       status.textContent = cameraErrorMessage();
@@ -165,7 +184,6 @@ export function renderScanButton({ onCard }) {
       await video.play();
       const detect = await detector;
       if (current !== session) return;
-      status.textContent = 'Point the camera at the QR code on a card.';
       scanLoop(detect, current);
     } catch (error) {
       if (current !== session) return;
@@ -173,6 +191,26 @@ export function renderScanButton({ onCard }) {
       status.textContent = cameraErrorMessage(error);
     }
   }
+
+  // Typing a code is a tap too, so the card's music can still start on its own.
+  codeForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const value = codeInput.value.trim();
+    const id = value ? cardIdFromCode(value) : null;
+    if (!id) {
+      status.textContent = value ? 'No card found for that code.' : 'Enter a card code.';
+      codeInput.setAttribute('aria-invalid', 'true');
+      codeInput.focus();
+      return;
+    }
+    openFound(id);
+  });
+  codeInput.addEventListener('input', () => {
+    codeInput.removeAttribute('aria-invalid');
+    if (status.textContent === 'No card found for that code.' || status.textContent === 'Enter a card code.') {
+      status.textContent = '';
+    }
+  });
 
   trigger.addEventListener('click', open);
   mount.querySelector('#scan-close').addEventListener('click', close);
