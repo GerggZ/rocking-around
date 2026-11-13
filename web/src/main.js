@@ -276,7 +276,10 @@ function showDashboard() {
   stopProgressLoop();
   trackStarted = false;
   providers.pauseTrack().catch(() => {});
-  renderDashboardView(cardMount, provider, { onOpenCard: goToCard });
+  renderDashboardView(cardMount, provider, {
+    onOpenCard: goToCard,
+    onChooseProvider: () => openProviderMenu()
+  });
 }
 
 // --- CARD TRANSITIONS ---

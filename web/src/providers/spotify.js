@@ -31,7 +31,8 @@ export async function login() {
   localStorage.setItem('spotify_oauth_state', state);
   const codeChallenge = await generateCodeChallenge(codeVerifier);
   
-  const scopes = "streaming user-read-email user-read-private user-modify-playback-state";
+  // playlist-read-* lets "Add playlist" read your private and collaborative playlists.
+  const scopes = "streaming user-read-email user-read-private user-modify-playback-state playlist-read-private playlist-read-collaborative";
   const authUrl = new URL("https://accounts.spotify.com/authorize");
   authUrl.searchParams.append("response_type", "code");
   authUrl.searchParams.append("client_id", CLIENT_ID);
@@ -193,4 +194,116 @@ export async function togglePlay() {
 export async function getCurrentState() {
   if (!spotifyPlayer) return null;
   return await spotifyPlayer.getCurrentState();
+}
+
+// --- PLAYLISTS ("Add playlist" on the main screen) ---
+// Since Spotify's February 2026 rules, apps in Development Mode only get the
+// songs of playlists the signed-in user owns or collaborates on. Anyone else's
+// playlist (including Spotify's own) has to be saved as a copy first.
+const MAX_PLAYLIST_TRACKS = 2000;
+
+export class PlaylistError extends Error {
+  constructor(code, message) {
+    super(message);
+    this.code = code;
+  }
+}
+
+// Accepts open.spotify.com/playlist/<id> links (with or without /intl-xx/ and
+// ?si=…), spotify:playlist:<id> URIs, or a bare playlist id.
+export function parsePlaylistId(input) {
+  const text = String(input ?? '').trim();
+  const match = text.match(/playlist[/:]([A-Za-z0-9]{22})/) ?? text.match(/^([A-Za-z0-9]{22})$/);
+  return match?.[1] ?? null;
+}
+
+const NOT_SHARED = "Spotify only shares the songs of playlists you own or collaborate on. " +
+  "Save a copy first (in Spotify: ••• → Add to other playlist → New playlist), then paste the copy's link.";
+
+async function spotifyGet(pathOrUrl) {
+  const token = getToken();
+  if (!token) throw new PlaylistError('signin', 'Connect Spotify to add a playlist.');
+  const url = pathOrUrl.startsWith('http') ? pathOrUrl : `https://api.spotify.com/v1${pathOrUrl}`;
+  let response;
+  try {
+    response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+  } catch {
+    throw new PlaylistError('network', 'Could not reach Spotify. Check your connection and try again.');
+  }
+  if (response.status === 401) {
+    clearSession();
+    throw new PlaylistError('signin', 'Your Spotify sign-in has expired. Connect Spotify again.');
+  }
+  if (response.status === 429) throw new PlaylistError('busy', 'Spotify is busy right now. Try again in a minute.');
+  return response;
+}
+
+function toCard(entry) {
+  const track = entry?.item ?? entry?.track;
+  if (!track || track.type !== 'track' || !track.id || track.is_local) return null;
+  return {
+    title: track.name ?? '',
+    artist: (track.artists ?? []).map(artist => artist.name).join(', '),
+    album: track.album?.name ?? '',
+    // Album release year. Remasters and compilations can show a later year.
+    year: (track.album?.release_date ?? '').slice(0, 4),
+    spotify: track.id
+  };
+}
+
+export async function fetchPlaylist(input) {
+  const id = parsePlaylistId(input);
+  if (!id) {
+    const shortLink = /spotify\.link|spotify\.app\.link/.test(String(input));
+    throw new PlaylistError('link', shortLink
+      ? 'Short share links can’t be read here. Open the link, then copy the full open.spotify.com address.'
+      : 'That doesn’t look like a Spotify playlist link.');
+  }
+
+  const response = await spotifyGet(`/playlists/${id}`);
+  if (response.status === 404) {
+    throw new PlaylistError('not-found', 'Spotify couldn’t find that playlist. ' + NOT_SHARED);
+  }
+  if (response.status === 403) throw new PlaylistError('not-shared', NOT_SHARED);
+  if (!response.ok) throw new PlaylistError('failed', 'Could not load that playlist. Please try again.');
+  const playlist = await response.json();
+
+  // The songs come inside the playlist only when Spotify shares them with us.
+  let page = playlist.items?.items ? playlist.items : playlist.tracks?.items ? playlist.tracks : null;
+  if (!page) {
+    // New endpoint first; the old one still answers for some apps created
+    // before Spotify's February 2026 changes, which may include public playlists.
+    for (const path of [`/playlists/${id}/items?limit=50`, `/playlists/${id}/tracks?limit=50`]) {
+      const itemsResponse = await spotifyGet(path);
+      if (itemsResponse.ok) {
+        page = await itemsResponse.json();
+        break;
+      }
+    }
+    if (!page) throw new PlaylistError('not-shared', NOT_SHARED);
+  }
+
+  const tracks = [];
+  const seen = new Set();
+  let skipped = 0;
+  while (page) {
+    for (const entry of page.items ?? []) {
+      const card = toCard(entry);
+      if (!card) { skipped++; continue; }
+      if (seen.has(card.spotify)) continue;
+      seen.add(card.spotify);
+      tracks.push(card);
+    }
+    if (!page.next || tracks.length >= MAX_PLAYLIST_TRACKS) break;
+    const next = await spotifyGet(page.next);
+    if (!next.ok) break;
+    page = await next.json();
+  }
+
+  if (!tracks.length) {
+    throw new PlaylistError('empty', skipped
+      ? 'That playlist has no Spotify songs to play (podcasts and local files are skipped).'
+      : 'That playlist is empty.');
+  }
+  return { id, name: playlist.name || 'My playlist', tracks: tracks.slice(0, MAX_PLAYLIST_TRACKS), skipped };
 }

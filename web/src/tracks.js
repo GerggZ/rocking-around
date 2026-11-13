@@ -40,3 +40,78 @@ for (const { tracks } of decks) {
 export function getTrackById(id) {
   return recordings.get(id) ?? null;
 }
+
+// --- SAVED PLAYLIST DECKS ---
+// Spotify playlists added on the main screen become extra decks. They are kept
+// in this browser (localStorage) until removed or the browser data is cleared.
+// Songs that are already in a built-in deck reuse that card (and its checked year).
+const PLAYLISTS_KEY = 'saved_playlists';
+const playlistDeckId = spotifyId => `pl-${spotifyId}`;
+
+const cardBySpotifyId = new Map();
+for (const track of recordings.values()) {
+  if (track.spotify && !cardBySpotifyId.has(track.spotify)) cardBySpotifyId.set(track.spotify, track.UniqueID);
+}
+
+let savedPlaylists = [];   // as stored: { id, name, tracks: [{ title, artist, album, year, spotify }] }
+let playlistDecks = [];
+
+function toDeck(playlist) {
+  const tracks = playlist.tracks.map(track => {
+    const known = cardBySpotifyId.get(track.spotify);
+    if (known) return recordings.get(known);
+    const UniqueID = `sp-${track.spotify}`;
+    if (!recordings.has(UniqueID)) recordings.set(UniqueID, { ...track, UniqueID });
+    return recordings.get(UniqueID);
+  });
+  return { id: playlistDeckId(playlist.id), name: playlist.name, playlistId: playlist.id, tracks, playlist: true };
+}
+
+function storePlaylists(list) {
+  // Throws when the browser is out of storage space; the caller reports it.
+  localStorage.setItem(PLAYLISTS_KEY, JSON.stringify(list));
+  savedPlaylists = list;
+  playlistDecks = list.map(toDeck);
+}
+
+export function getPlaylistDecks() {
+  return playlistDecks;
+}
+
+// Adds a playlist (or refreshes it, when the same playlist is added again) and returns its deck.
+export function addPlaylistDeck(playlist) {
+  storePlaylists([playlist, ...savedPlaylists.filter(saved => saved.id !== playlist.id)]);
+  return playlistDecks[0];
+}
+
+export function removePlaylistDeck(deckId) {
+  storePlaylists(savedPlaylists.filter(saved => playlistDeckId(saved.id) !== deckId));
+}
+
+try {
+  const stored = JSON.parse(localStorage.getItem(PLAYLISTS_KEY) || '[]');
+  if (Array.isArray(stored)) {
+    savedPlaylists = stored.filter(saved => saved?.id && saved.tracks?.length);
+    playlistDecks = savedPlaylists.map(toDeck);
+  }
+} catch {}
+
+export function allDecks() {
+  return [...playlistDecks, ...decks];
+}
+
+// Several decks can be played together: their ids joined with "+" (e.g.
+// "playlist+classic") make one mixed deck.
+export function getDeck(id) {
+  if (!id) return null;
+  const parts = String(id).split('+')
+    .map(part => allDecks().find(deck => deck.id === part))
+    .filter(Boolean);
+  if (parts.length <= 1) return parts[0] ?? null;
+  return {
+    id: parts.map(deck => deck.id).join('+'),
+    name: parts.map(deck => deck.name).join(' + '),
+    tracks: parts.flatMap(deck => deck.tracks),
+    parts
+  };
+}

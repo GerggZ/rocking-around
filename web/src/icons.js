@@ -40,6 +40,10 @@ export const ICONS = {
     '<rect x="12.8" y="12.8" width="1.6" height="1.6" rx=".3"/><rect x="14.4" y="14.4" width="1.6" height="1.6" rx=".3"/></g>',
     STROKE
   ),
+  playlistAdd: svg(
+    '<path d="M4 6.5h12M4 11.5h12M4 16.5h7M18 13.5v7M14.5 17h7"/>',
+    STROKE
+  ),
   note: svg(
     '<path d="M9 18.5a3 3 0 1 1-2-2.83V5l12-2v12.5a3 3 0 1 1-2-2.83V6.4L9 7.9Z"/>',
     'fill="currentColor"'

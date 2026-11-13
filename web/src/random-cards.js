@@ -1,4 +1,4 @@
-import { decks, getTrackById } from './tracks.js';
+import { allDecks, getDeck, getTrackById } from './tracks.js';
 
 export function getPlayableCardIds(deck, provider) {
   const ids = new Set(deck.tracks.map(track => track.UniqueID));
@@ -12,9 +12,10 @@ export function pickRandomCard(candidates) {
   return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
+// The deck "Random Card" keeps drawing from after this card: the chosen deck
+// (or mix of decks) when it holds the card, otherwise the first deck that does.
 export function findDeckForCard(songId, preferredDeckId) {
-  const matchingDecks = decks.filter(deck =>
-    deck.tracks.some(track => track.UniqueID === songId)
-  );
-  return matchingDecks.find(deck => deck.id === preferredDeckId) ?? matchingDecks[0];
+  const holdsCard = deck => Boolean(deck?.tracks.some(track => track.UniqueID === songId));
+  const preferred = getDeck(preferredDeckId);
+  return holdsCard(preferred) ? preferred : allDecks().find(holdsCard);
 }

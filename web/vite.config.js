@@ -27,6 +27,10 @@ export default defineConfig(({ command, isPreview, mode }) => {
         apply: 'build',
         generateBundle() {
           this.emitFile({ type: 'asset', fileName: 'version.json', source: JSON.stringify({ version }) });
+        },
+        closeBundle() {
+          // Compare this with "Version:" in the app's "Play with…" menu on your phone
+          console.log(`\n  RockingAround version: ${version}\n`);
         }
       }
     ]
