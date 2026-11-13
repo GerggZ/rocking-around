@@ -18,8 +18,8 @@ function active() {
 }
 
 function openPendingCard() {
-  const pendingSong = sessionStorage.getItem('pending_song');
-  sessionStorage.removeItem('pending_song');
+  const pendingSong = localStorage.getItem('pending_song');
+  localStorage.removeItem('pending_song');
   if (pendingSong) {
     window.location.href = `${window.location.pathname}?song=${encodeURIComponent(pendingSong)}`;
     return true;
@@ -39,8 +39,8 @@ export async function login(name) {
   if (!provider) return;
   const params = new URLSearchParams(window.location.search);
   const song = params.get('song') || params.get('card');
-  if (song) sessionStorage.setItem('pending_song', song);
-  else sessionStorage.removeItem('pending_song');
+  if (song) localStorage.setItem('pending_song', song);
+  else localStorage.removeItem('pending_song');
   await pauseTrack();
   localStorage.setItem('selected_provider', name);
   if (provider.hasSession()) {

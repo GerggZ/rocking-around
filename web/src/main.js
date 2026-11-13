@@ -7,6 +7,7 @@ import { renderDashboardView } from './views/dashboard.js';
 import { renderPlayerView } from './views/player.js';
 import { setPlayerIcon, setPlayerProgress } from './views/player-visual.js';
 import { renderScanButton } from './views/scanner.js';
+import { setupMediaSession, updateMediaSession } from './media-session.js';
 
 const cardMount = document.getElementById('card-mount');
 const externalMount = document.getElementById('external-content');
@@ -35,6 +36,20 @@ function setUserPaused(paused) {
     else sessionStorage.removeItem(pausedKey);
   } catch {}
 }
+
+// Installable app (see public/sw.js). Only in the built site: during
+// development a cached page would hide your latest changes.
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => {});
+  });
+}
+
+// Play/pause in the phone's media controls work like the cassette button.
+setupMediaSession({
+  onPlay: () => { if (!isPlaying) document.getElementById('play-pause-btn')?.click(); },
+  onPause: () => { if (isPlaying) document.getElementById('play-pause-btn')?.click(); }
+});
 
 function setStatus(message) {
   const status = document.getElementById('status-msg');
@@ -85,6 +100,7 @@ function stopProgressLoop() {
 function handlePlayerStateChange(state) {
   if (!state) return;
   isPlaying = !state.paused;
+  updateMediaSession(isPlaying);
   const playBtn = document.getElementById('play-pause-btn');
 
   if (playBtn) {

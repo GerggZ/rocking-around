@@ -60,8 +60,8 @@ export async function login() {
   if (!clientId) throw new Error('TIDAL client ID is missing. Add VITE_TIDAL_CLIENT_ID to .env.local.');
   const verifier = randomString(64);
   const state = 'tidal-' + randomString(16);
-  sessionStorage.setItem('tidal_code_verifier', verifier);
-  sessionStorage.setItem('tidal_oauth_state', state);
+  localStorage.setItem('tidal_code_verifier', verifier);
+  localStorage.setItem('tidal_oauth_state', state);
   const url = new URL(authorizeUrl);
   url.search = new URLSearchParams({
     response_type: 'code',
@@ -77,7 +77,7 @@ export async function login() {
 
 export function isCallback(params) {
   const state = params.get('state');
-  return Boolean(state && state === sessionStorage.getItem('tidal_oauth_state'));
+  return Boolean(state && state === localStorage.getItem('tidal_oauth_state'));
 }
 
 async function requestToken(body) {
@@ -109,9 +109,9 @@ async function requestToken(body) {
 }
 
 export async function handleCallback(code) {
-  const verifier = sessionStorage.getItem('tidal_code_verifier');
-  sessionStorage.removeItem('tidal_code_verifier');
-  sessionStorage.removeItem('tidal_oauth_state');
+  const verifier = localStorage.getItem('tidal_code_verifier');
+  localStorage.removeItem('tidal_code_verifier');
+  localStorage.removeItem('tidal_oauth_state');
   window.history.replaceState({}, document.title, window.location.pathname);
   await requestToken({ grant_type: 'authorization_code', code, redirect_uri: redirectUri, code_verifier: verifier });
 }

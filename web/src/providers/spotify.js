@@ -25,8 +25,8 @@ export async function login() {
   if (!CLIENT_ID) throw new Error('Spotify client ID is missing from the site configuration.');
   const codeVerifier = generateRandomString(64);
   const state = 'spotify-' + generateRandomString(16);
-  sessionStorage.setItem('spotify_code_verifier', codeVerifier);
-  sessionStorage.setItem('spotify_oauth_state', state);
+  localStorage.setItem('spotify_code_verifier', codeVerifier);
+  localStorage.setItem('spotify_oauth_state', state);
   const codeChallenge = await generateCodeChallenge(codeVerifier);
   
   const scopes = "streaming user-read-email user-read-private user-modify-playback-state";
@@ -44,13 +44,13 @@ export async function login() {
 
 export function isCallback(params) {
   const state = params.get('state');
-  return Boolean(state && state === sessionStorage.getItem('spotify_oauth_state'));
+  return Boolean(state && state === localStorage.getItem('spotify_oauth_state'));
 }
 
 export async function handleCallback(code) {
-  const verifier = sessionStorage.getItem('spotify_code_verifier');
-  sessionStorage.removeItem('spotify_code_verifier');
-  sessionStorage.removeItem('spotify_oauth_state');
+  const verifier = localStorage.getItem('spotify_code_verifier');
+  localStorage.removeItem('spotify_code_verifier');
+  localStorage.removeItem('spotify_oauth_state');
   window.history.replaceState({}, document.title, window.location.pathname);
   
   const response = await fetch("https://accounts.spotify.com/api/token", {
@@ -94,7 +94,7 @@ function clearSession() {
 
 export function logout() {
   clearSession();
-  sessionStorage.removeItem('spotify_code_verifier');
+  localStorage.removeItem('spotify_code_verifier');
   spotifyPlayer?.disconnect();
 }
 
