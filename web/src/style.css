@@ -32,6 +32,7 @@
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -225,6 +226,15 @@ p {
   box-shadow: 0 5px 14px var(--leaf-glow);
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.play-btn:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.play-btn:focus-visible {
+  outline: 2px solid var(--leaf-green);
+  outline-offset: 4px;
 }
 
 .play-btn svg {
@@ -702,4 +712,74 @@ body:has(.provider-dialog[open]) {
 ::-webkit-scrollbar-thumb {
   background: var(--scrollbar-brown);
   border-radius: 999px;
+}
+
+/* In-app QR scanner: sits beside the music provider button. */
+.scan-control {
+  position: fixed;
+  top: max(1rem, env(safe-area-inset-top));
+  right: calc(max(1rem, env(safe-area-inset-right)) + 38px + 0.75rem);
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  color: var(--text-on-green);
+  background: var(--leaf-green);
+  border: 0;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px var(--leaf-glow);
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.scan-control:hover {
+  background: var(--leaf-green-hover);
+  box-shadow: 0 6px 16px rgba(45, 106, 79, 0.3);
+  transform: translateY(-1px);
+}
+
+.scan-control:focus-visible,
+.scan-dialog .provider-close:focus-visible {
+  outline: 2px solid var(--leaf-green);
+  outline-offset: 3px;
+}
+
+.scan-control svg {
+  width: 22px;
+  height: 22px;
+}
+
+.scan-viewport {
+  position: relative;
+  aspect-ratio: 1;
+  margin-top: 0.75rem;
+  overflow: hidden;
+  background: var(--text-dark);
+  border-radius: 0.75rem;
+}
+
+.scan-viewport video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scan-frame {
+  position: absolute;
+  inset: 14%;
+  border: 2px solid rgba(255, 242, 209, 0.9);
+  border-radius: 0.75rem;
+  box-shadow: 0 0 0 999px rgba(0, 0, 0, 0.28);
+  pointer-events: none;
+}
+
+.scan-status {
+  min-height: 2.6em;
+  margin: 0.75rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-align: center;
 }

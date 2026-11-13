@@ -1,10 +1,11 @@
 import * as providers from './providers/index.js';
 import { getTrackById } from './tracks.js';
-import { getPlayableCardIds, pickRandomCard, findDeckForCard, restoreRandomDeck } from './random-cards.js';
+import { getPlayableCardIds, pickRandomCard, findDeckForCard } from './random-cards.js';
 
 import { renderProviderMenu } from './views/provider-menu.js';
 import { renderDashboardView } from './views/dashboard.js';
 import { renderPlayerView } from './views/player.js';
+import { renderScanButton } from './views/scanner.js';
 import { ICONS } from './icons.js';
 
 const cardMount = document.getElementById('card-mount');
@@ -159,12 +160,11 @@ function showCard(songId, deck, { autoplay = true } = {}) {
   }
 
   currentTrackId = provider ? trackData[provider] : null;
-  const nextCards = deck
-    ? getPlayableCardIds(deck, provider).filter(id => id !== songId)
-    : [];
+  const nextDeck = deck ?? findDeckForCard(songId, window.history.state?.randomDeckId ?? sessionStorage.getItem('selected_deck'));
+  const nextCards = getPlayableCardIds(nextDeck, provider).filter(id => id !== songId);
 
   renderPlayerView(cardMount, trackData, {
-    onNext: nextCards.length ? () => goToCard(pickRandomCard(nextCards), deck) : null,
+    onNext: nextCards.length ? () => goToCard(pickRandomCard(nextCards), nextDeck) : null,
     onBack: goHome
   });
 
@@ -251,7 +251,7 @@ function currentSongParam() {
 
 window.addEventListener('popstate', () => {
   const songId = currentSongParam();
-  if (songId) showCard(songId, findDeckForCard(window.history.state?.randomDeckId, songId));
+  if (songId) showCard(songId);
   else showDashboard();
 });
 
@@ -271,10 +271,13 @@ async function initApp() {
     onDisconnect: providers.logout
   });
 
+  // In-app scanning: the scan tap unlocks audio, so the scanned card plays.
+  renderScanButton({ onCard: songId => goToCard(songId) });
+
   // Connect early, so the first card can start as soon as someone taps.
   if (provider) startPlayer();
 
-  if (songId) showCard(songId, restoreRandomDeck(songId));
+  if (songId) showCard(songId);
   else showDashboard();
 }
 

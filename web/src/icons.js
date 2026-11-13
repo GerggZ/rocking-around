@@ -33,6 +33,13 @@ export const ICONS = {
     '<circle cx="12" cy="12" r="11" fill="currentColor"/>' +
     '<path d="M10 16.2a2 2 0 1 1-1.3-1.87V7.6l7-1.4v8.1a2 2 0 1 1-1.3-1.87V8.3L10 9.2Z" fill="var(--provider-icon-paper)"/>'
   ),
+  scan: svg(
+    '<path d="M4 8.5V6a2 2 0 0 1 2-2h2.5M15.5 4H18a2 2 0 0 1 2 2v2.5M20 15.5V18a2 2 0 0 1-2 2h-2.5M8.5 20H6a2 2 0 0 1-2-2v-2.5"/>' +
+    '<g fill="currentColor" stroke="none"><rect x="8" y="8" width="3.2" height="3.2" rx=".6"/>' +
+    '<rect x="12.8" y="8" width="3.2" height="3.2" rx=".6"/><rect x="8" y="12.8" width="3.2" height="3.2" rx=".6"/>' +
+    '<rect x="12.8" y="12.8" width="1.6" height="1.6" rx=".3"/><rect x="14.4" y="14.4" width="1.6" height="1.6" rx=".3"/></g>',
+    STROKE
+  ),
   note: svg(
     '<path d="M9 18.5a3 3 0 1 1-2-2.83V5l12-2v12.5a3 3 0 1 1-2-2.83V6.4L9 7.9Z"/>',
     'fill="currentColor"'

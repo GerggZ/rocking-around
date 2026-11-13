@@ -67,8 +67,8 @@ export async function handleCallback(code) {
 
   const data = await response.json();
   if (data.access_token) {
-    sessionStorage.setItem('spotify_access_token', data.access_token);
-    sessionStorage.setItem('spotify_token_expires_at', String(Date.now() + data.expires_in * 1000));
+    localStorage.setItem('spotify_access_token', data.access_token);
+    localStorage.setItem('spotify_token_expires_at', String(Date.now() + data.expires_in * 1000));
     return data.access_token;
   }
   throw new Error("Failed to retrieve access token");
@@ -79,17 +79,17 @@ export function hasSession() {
 }
 
 function getToken() {
-  const expiresAt = sessionStorage.getItem('spotify_token_expires_at');
+  const expiresAt = localStorage.getItem('spotify_token_expires_at');
   if (expiresAt && Number(expiresAt) <= Date.now()) {
     clearSession();
     return null;
   }
-  return sessionStorage.getItem('spotify_access_token');
+  return localStorage.getItem('spotify_access_token');
 }
 
 function clearSession() {
-  sessionStorage.removeItem('spotify_access_token');
-  sessionStorage.removeItem('spotify_token_expires_at');
+  localStorage.removeItem('spotify_access_token');
+  localStorage.removeItem('spotify_token_expires_at');
 }
 
 export function logout() {

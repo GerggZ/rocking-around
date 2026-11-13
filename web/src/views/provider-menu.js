@@ -35,7 +35,7 @@ export function renderProviderMenu({ provider, accounts, onSelect, onDisconnect 
     </button>
     <dialog id="provider-dialog" class="provider-dialog" aria-labelledby="provider-title">
       <div class="provider-dialog-heading">
-        <h2 id="provider-title">Music provider</h2>
+        <h2 id="provider-title">Play with…</h2>
         <button id="provider-close" class="provider-close" type="button" aria-label="Close music provider options" autofocus>×</button>
       </div>
       ${Object.keys(providerInfo).filter(name => accounts[name]).map(name => providerSection(name, provider, accounts[name])).join('')}

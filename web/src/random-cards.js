@@ -12,15 +12,9 @@ export function pickRandomCard(candidates) {
   return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
-export function findDeckForCard(deckId, songId) {
-  return decks.find(deck =>
-    deck.id === deckId &&
+export function findDeckForCard(songId, preferredDeckId) {
+  const matchingDecks = decks.filter(deck =>
     deck.tracks.some(track => track.UniqueID === songId)
-  ) ?? null;
-}
-
-// The deck a random card came from is kept in the browser history entry, so
-// "Next Random Card" still works after a reload or Back/Forward.
-export function restoreRandomDeck(songId) {
-  return findDeckForCard(window.history.state?.randomDeckId, songId);
+  );
+  return matchingDecks.find(deck => deck.id === preferredDeckId) ?? matchingDecks[0];
 }

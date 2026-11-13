@@ -36,11 +36,12 @@ export function renderPlayerView(container, trackData, { onNext, onBack }) {
   const externalSection = document.getElementById('external-content');
   if (externalSection) {
     externalSection.innerHTML = `
-      ${onNext ? '<button id="next-random-card" class="action-btn" type="button">Next Random Card</button>' : ''}
+      <button id="next-random-card" class="action-btn" type="button" ${onNext ? '' : 'disabled'}>Random Card</button>
       <button id="back-home-btn" class="outer-back-btn">← Back to Menu</button>
     `;
     const nextButton = externalSection.querySelector('#next-random-card');
-    nextButton?.addEventListener('click', async () => {
+    nextButton.addEventListener('click', async () => {
+      if (!onNext) return;
       nextButton.disabled = true;
       try {
         await onNext();

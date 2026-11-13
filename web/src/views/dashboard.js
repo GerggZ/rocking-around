@@ -35,7 +35,7 @@ export function renderDashboardView(container, providerName, { onOpenCard }) {
           ${decks.map(deck => `<li><button type="button" data-deck-id="${deck.id}">${deck.name}</button></li>`).join('')}
         </ul>
       </details>
-      <button id="random-card" class="action-btn" type="button">Play Random Card</button>
+      <button id="random-card" class="action-btn" type="button">Random Card</button>
       <p id="deck-status" role="status"></p>
     </div>
   `;

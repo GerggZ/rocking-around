@@ -42,7 +42,7 @@ export async function login(name) {
   if (song) sessionStorage.setItem('pending_song', song);
   else sessionStorage.removeItem('pending_song');
   await pauseTrack();
-  sessionStorage.setItem('selected_provider', name);
+  localStorage.setItem('selected_provider', name);
   if (provider.hasSession()) {
     if (!openPendingCard()) window.location.reload();
     return;
@@ -54,7 +54,7 @@ export function logout(name) {
   const provider = providers[name];
   if (!provider) return;
   provider.logout();
-  if (sessionStorage.getItem('selected_provider') === name) sessionStorage.removeItem('selected_provider');
+  if (localStorage.getItem('selected_provider') === name) localStorage.removeItem('selected_provider');
   window.location.reload();
 }
 
@@ -67,7 +67,7 @@ export async function checkAuth() {
     if (name) {
       await providers[name].handleCallback(code);
       activeProvider = name;
-      sessionStorage.setItem('selected_provider', name);
+      localStorage.setItem('selected_provider', name);
       openPendingCard();
       return { authenticated: true, provider: name };
     }
@@ -75,7 +75,7 @@ export async function checkAuth() {
     window.history.replaceState({}, document.title, window.location.pathname);
   }
 
-  const selected = sessionStorage.getItem('selected_provider');
+  const selected = localStorage.getItem('selected_provider');
   if (providers[selected]) {
     activeProvider = selected;
   } else {
