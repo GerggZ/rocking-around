@@ -1,5 +1,6 @@
 import { providerIcon } from '../icons.js';
 import { showDialogFrom } from './dialog-motion.js';
+import { APP_VERSION } from '../version.js';
 
 // These logos are already a circle, so they become the button themselves
 // instead of sitting inside a second green circle.
@@ -41,6 +42,7 @@ export function renderProviderMenu({ provider, accounts, onSelect, onDisconnect 
       </div>
       ${Object.keys(providerInfo).filter(name => accounts[name]).map(name => providerSection(name, provider, accounts[name])).join('')}
       <p id="provider-error" role="status"></p>
+      <p class="app-version">Version: ${APP_VERSION}</p>
     </dialog>
   `;
 

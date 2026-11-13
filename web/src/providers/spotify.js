@@ -1,3 +1,5 @@
+import { followPlayback, unlockSilentLoop } from '../media-session.js';
+
 export const requiresLogin = true;
 
 const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
@@ -134,6 +136,8 @@ export async function initPlayer(onReady, onError, onStateChange, onAutoplayBloc
   });
 
   spotifyPlayer.addListener('player_state_changed', (state) => {
+    // Keeps the phone's media controls showing RockingAround (see media-session.js)
+    followPlayback(Boolean(state && !state.paused));
     if (onStateChange) onStateChange(state);
   });
 
@@ -170,6 +174,7 @@ export async function playTrack(trackId) {
 // Must run inside a tap/click handler. Once activated, the SDK's audio can
 // start later without another tap (Spotify's answer to browser autoplay rules).
 export function unlockAudio() {
+  unlockSilentLoop();
   if (audioActivated || !spotifyPlayer?.activateElement) return;
   audioActivated = true;
   spotifyPlayer.activateElement().catch(() => { audioActivated = false; });

@@ -8,6 +8,7 @@ import { renderPlayerView } from './views/player.js';
 import { setPlayerIcon, setPlayerProgress } from './views/player-visual.js';
 import { renderScanButton } from './views/scanner.js';
 import { setupMediaSession, updateMediaSession } from './media-session.js';
+import { watchForUpdates } from './version.js';
 
 const cardMount = document.getElementById('card-mount');
 const externalMount = document.getElementById('external-content');
@@ -44,6 +45,8 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
     navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => {});
   });
 }
+
+watchForUpdates();
 
 // Play/pause in the phone's media controls work like the cassette button.
 setupMediaSession({
