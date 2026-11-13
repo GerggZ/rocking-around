@@ -5,8 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="data:,">
   <title>RockingAround Web Dashboard</title>
-  <script type="module" crossorigin src="/rocking-around/assets/index-C7EVtNNU.js"></script>
-  <link rel="stylesheet" crossorigin href="/rocking-around/assets/index-Ct2sZ0cr.css">
+  <script>
+    // Opened straight onto a card (camera-app scan or a shared link): keep the
+    // card out of sight until it drops in, instead of showing an empty frame.
+    if (/[?&](song|card)=/.test(location.search)) document.documentElement.classList.add('arriving');
+  </script>
+  <script type="module" crossorigin src="/rocking-around/assets/index-73TUhSU5.js"></script>
+  <link rel="stylesheet" crossorigin href="/rocking-around/assets/index-Dx3Pb0Yx.css">
 </head>
 <body>
 
