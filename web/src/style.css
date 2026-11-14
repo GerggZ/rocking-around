@@ -466,8 +466,8 @@ p {
   box-shadow: 0 3px 8px rgba(60, 42, 30, 0.16);
   /* Tilts around the top-right corner, so the top edge never pokes above the slot. */
   transform-origin: 100% 0;
-  transform: translateY(-105%);
-  transition: transform 260ms cubic-bezier(0.55, 0, 0.75, 0.4);
+  /* Tucked away far enough that its shadow is hidden too. */
+  transform: translateY(calc(-100% - 16px));
 }
 
 .insert-card::before {
@@ -508,18 +508,30 @@ p {
   animation: insert-pull 650ms ease-out forwards;
 }
 
+/* Hiding it: it straightens up and slides back in under the button.
+   .was-opened (set in main.js) keeps this from playing when a card first loads. */
+.answer-slot--insert.was-opened:not(.is-open) .insert-card {
+  animation: insert-push 300ms cubic-bezier(0.55, 0, 0.75, 0.4) forwards;
+}
+
 /* One motion: it starts tipping once it's mostly out, keeps turning through
    the small overshoot, and lands as the tilt settles. */
 @keyframes insert-pull {
-  0%   { transform: translateY(-105%) rotate(0deg); }
+  0%   { transform: translateY(calc(-100% - 16px)) rotate(0deg); }
   35%  { transform: translateY(-30%) rotate(0deg); }
   60%  { transform: translateY(4%) rotate(-1.1deg); }
   82%  { transform: translateY(-1%) rotate(-1.8deg); }
   100% { transform: translateY(0) rotate(-1.5deg); }
 }
 
+@keyframes insert-push {
+  0%   { transform: translateY(0) rotate(-1.5deg); }
+  25%  { transform: translateY(3%) rotate(0deg); }
+  100% { transform: translateY(calc(-100% - 16px)) rotate(0deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .insert-card { transition: none; }
+  .answer-slot--insert.was-opened:not(.is-open) .insert-card { animation: none; }
   .answer-slot--insert.is-open .insert-card {
     animation: none;
     transform: rotate(-1.5deg);

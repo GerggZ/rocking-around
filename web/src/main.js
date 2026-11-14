@@ -244,6 +244,8 @@ function showCard(songId, deck, { autoplay = true } = {}) {
   revealBtn?.addEventListener('click', () => {
     aimAnswerAtButton();
     const isOpen = answerSlot.classList.toggle('is-open');
+    // Lets the slide-back-in animation play when it's hidden again (see style.css).
+    if (isOpen) answerSlot.classList.add('was-opened');
     answerReveal.inert = !isOpen;
     revealBtn.setAttribute('aria-expanded', String(isOpen));
     revealBtn.textContent = isOpen ? 'Hide Track Info' : 'Reveal Track Info';
