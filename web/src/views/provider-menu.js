@@ -40,9 +40,11 @@ export function renderProviderMenu({ provider, accounts, onSelect, onDisconnect 
         <h2 id="provider-title">Play with…</h2>
         <button id="provider-close" class="provider-close" type="button" aria-label="Close music provider options" autofocus>×</button>
       </div>
-      ${Object.keys(providerInfo).filter(name => accounts[name]).map(name => providerSection(name, provider, accounts[name])).join('')}
-      <p id="provider-error" role="status"></p>
-      <p class="app-version">Version: ${APP_VERSION}</p>
+      <div class="dialog-body">
+        ${Object.keys(providerInfo).filter(name => accounts[name]).map(name => providerSection(name, provider, accounts[name])).join('')}
+        <p id="provider-error" role="status"></p>
+        <p class="app-version">Version: ${APP_VERSION}</p>
+      </div>
     </dialog>
   `;
 

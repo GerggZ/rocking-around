@@ -43,6 +43,7 @@ const BAR_X = 36, BAR_W = 100;                   // progress bar on the label
 const ICON_X = 24, ICON_Y = 19;                  // centre of the green play/pause dot
 const GUIDE_L = [30, 92], GUIDE_R = [130, 92];  // where the tape heads for, below the window
 const SPIN = 900;                                // reel speed: degrees per second at radius 1
+const TAPE_W = 1.4;                              // tape stroke width
 
 const STRIPES = ['#2d6a4f', '#3a8362', '#eec04c', '#c98a4b', '#6b4423'];
 
@@ -77,8 +78,8 @@ const cassetteMarkup = () => {
         ${stripes}
         <rect x="38" y="34" width="84" height="24" rx="12" fill="#2a2e31"/>
         <g clip-path="url(#cassette-window)">
-          <line class="cassette-tape-l" stroke="#5a4636" stroke-width="1.4"/>
-          <line class="cassette-tape-r" stroke="#5a4636" stroke-width="1.4"/>
+          <line class="cassette-tape-l" stroke="#5a4636" stroke-width="${TAPE_W}" stroke-linecap="round"/>
+          <line class="cassette-tape-r" stroke="#5a4636" stroke-width="${TAPE_W}" stroke-linecap="round"/>
           <circle class="cassette-pack-l" cx="${REEL_L}" cy="${REEL_Y}" r="${PACK_FULL}" fill="#5a4636"/>
           <circle class="cassette-pack-r" cx="${REEL_R}" cy="${REEL_Y}" r="${PACK_EMPTY}" fill="#5a4636"/>
         </g>
@@ -86,8 +87,10 @@ const cassetteMarkup = () => {
         <rect x="${BAR_X}" y="17" width="${BAR_W}" height="4" rx="2" fill="#e2d3a8"/>
         <rect class="cassette-bar" x="${BAR_X}" y="17" width="0" height="4" rx="2" fill="#2d6a4f"/>
         <circle class="cassette-bar-dot" cx="${BAR_X}" cy="19" r="3" fill="#3a8362"/>
-        <circle cx="${ICON_X}" cy="${ICON_Y}" r="8" fill="#2d6a4f"/>
-        <g class="cassette-icon" fill="#f4f8f5">${CASSETTE_ICON.play}</g>
+        <g class="cassette-key">
+          <circle cx="${ICON_X}" cy="${ICON_Y}" r="8" fill="#2d6a4f"/>
+          <g class="cassette-icon" fill="#f4f8f5">${CASSETTE_ICON.play}</g>
+        </g>
         <path d="M38 98 L46 81 L114 81 L122 98Z" fill="#34393c"/>
         <circle cx="80" cy="88" r="2.3" fill="#2a2e31"/>
         <circle cx="56" cy="92" r="2.4" fill="#1e2124"/><circle cx="68" cy="93" r="1.8" fill="#1e2124"/>
@@ -126,8 +129,12 @@ function drawCassette(progress, totalSeconds) {
   q('.cassette-pack-r').setAttribute('r', right);
 
   // The tape leaves each pack on its outer side, heading down to the rollers.
-  setLine(q('.cassette-tape-l'), tangentPoint(REEL_L, left, GUIDE_L, 1), GUIDE_L);
-  setLine(q('.cassette-tape-r'), tangentPoint(REEL_R, right, GUIDE_R, -1), GUIDE_R);
+  // The line runs tangent to the pack's outer edge (radius + half the stroke),
+  // so it lies flush against the pack instead of cutting into it; the round
+  // cap fills the joint.
+  const edge = TAPE_W / 2;
+  setLine(q('.cassette-tape-l'), tangentPoint(REEL_L, left + edge, GUIDE_L, 1), GUIDE_L);
+  setLine(q('.cassette-tape-r'), tangentPoint(REEL_R, right + edge, GUIDE_R, -1), GUIDE_R);
 
   q('.cassette-bar').setAttribute('width', BAR_W * progress);
   q('.cassette-bar-dot').setAttribute('cx', BAR_X + BAR_W * progress);
@@ -157,7 +164,18 @@ export function setPlayerIcon(button, playing) {
   button.setAttribute('aria-label', playing ? 'Pause' : 'Play');
   if (isCassette) {
     const icon = button.querySelector('.cassette-icon');
-    if (icon) icon.innerHTML = playing ? CASSETTE_ICON.pause : CASSETTE_ICON.play;
+    if (icon && icon.dataset.state !== String(playing)) {
+      const changed = icon.dataset.state !== undefined;
+      icon.dataset.state = String(playing);
+      icon.innerHTML = playing ? CASSETTE_ICON.pause : CASSETTE_ICON.play;
+      // A little pop on the green key whenever play/pause actually flips.
+      const key = button.querySelector('.cassette-key');
+      if (changed && key) {
+        key.classList.remove('is-popping');
+        void key.getBoundingClientRect();   // restart the animation
+        key.classList.add('is-popping');
+      }
+    }
   } else {
     button.innerHTML = playing ? ICONS.pause : ICONS.play;
   }

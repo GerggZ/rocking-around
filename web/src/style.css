@@ -265,7 +265,8 @@ p {
   border: 0;
   cursor: pointer;
   filter: drop-shadow(0 5px 12px rgba(60, 42, 30, 0.25));
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .cassette-btn svg {
@@ -275,6 +276,33 @@ p {
 }
 
 .cassette-btn:hover { transform: scale(1.03); }
+
+/* Pressed: the cassette sinks a little and its shadow tightens, like pushing
+   a deck key. Fast in, normal speed back out. */
+.cassette-btn:not(:disabled):active {
+  transform: translateY(2px) scale(0.97);
+  filter: drop-shadow(0 2px 4px rgba(60, 42, 30, 0.3));
+  transition-duration: 0.06s;
+}
+
+.cassette-key {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.cassette-key.is-popping { animation: cassette-key-pop 0.32s ease-out; }
+
+@keyframes cassette-key-pop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(0.78); }
+  70%  { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cassette-btn:not(:disabled):active { transform: none; }
+  .cassette-key.is-popping { animation: none; }
+}
 .cassette-btn:disabled { cursor: default; transform: none; }
 .cassette-btn:focus:not(:focus-visible) { outline: none; }
 
@@ -1367,4 +1395,188 @@ body:has(.provider-dialog[open]) {
   font: inherit;
   font-weight: 600;
   cursor: pointer;
+}
+
+/* --- PHONE LANDSCAPE: CARD AND BUTTONS SIDE BY SIDE ---
+   A phone on its side is too short for the card with the buttons stacked
+   under it, so on the main page and during a game the controls move to the
+   right of the card.
+   The card stays full size whenever it fits and only shrinks as much as the
+   screen height demands (--card-fit, set in main.js). The buttons take
+   whatever width is left and narrow first. */
+@media (orientation: landscape) and (max-height: 540px) {
+  .page-scroll {
+    padding:
+      max(0.5rem, env(safe-area-inset-top))
+      max(1rem, env(safe-area-inset-right))
+      max(0.5rem, env(safe-area-inset-bottom))
+      max(1rem, env(safe-area-inset-left));
+  }
+
+  .app-viewport:has(#game-view, #dashboard-view) {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+    max-width: none;
+    transform: none;
+  }
+
+  /* The card artwork has empty space above and below it inside its 500px box.
+     Trim it (40px off the top, 56px off the bottom) so the visible card can
+     use the full screen height. The artwork itself is untouched. */
+  .app-viewport:has(#game-view, #dashboard-view) .card-board {
+    flex: none;
+    height: 404px;
+    overflow: clip;
+    zoom: var(--card-fit, 1);
+  }
+
+  .app-viewport:has(#game-view, #dashboard-view) .frame-bg {
+    top: -40px;
+    bottom: auto;
+    height: 500px;
+  }
+
+  /* Keep the paper's contents where they sit on the artwork. */
+  .app-viewport:has(#game-view, #dashboard-view) .card-content {
+    margin-top: 16px;
+  }
+
+  .app-viewport:has(#game-view, #dashboard-view) #external-content {
+    flex: 0 1 200px;
+    min-width: 130px;
+    margin-top: 0;
+  }
+
+  /* Main page: the deck controls sit beside the card instead of tucked
+     under it, and get a little more room than the game's two buttons. */
+  .app-viewport:has(#dashboard-view) #external-content {
+    flex-basis: 18rem;
+    min-width: 200px;
+    /* Clear of the scan and music buttons in the top corner. */
+    padding-top: 2.75rem;
+  }
+
+  .app-viewport:has(#dashboard-view) .dashboard-controls {
+    margin-top: 0;
+  }
+
+  .app-viewport:has(#dashboard-view) .card-lookup {
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .app-viewport:has(#dashboard-view) .section-title {
+    margin-bottom: 0.5rem;
+  }
+
+  /* The deck list opens upwards over the card-code box, which has more room
+     than the space below, and scrolls if there are more decks than fit. */
+  .app-viewport:has(#dashboard-view) .deck-options {
+    inset: auto 0 calc(100% + 0.35rem);
+    max-height: calc(50dvh - 3.75rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .app-viewport:has(#game-view, #dashboard-view) .outer-back-btn {
+    max-width: 100%;
+    padding-inline: 1rem;
+  }
+}
+
+/* --- SCROLLING INSIDE THE PAPER ---
+   When a window is taller than the screen (a phone on its side), only its
+   body scrolls: the heading stays put, and the text fades out at the edges
+   of the paper instead of sliding over the card's border. */
+/* Only `display` waits for [open]: the rest must stay while the window
+   animates closed, or its contents jump around as it shrinks away. */
+.provider-dialog:has(> .dialog-body) {
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.provider-dialog[open]:has(> .dialog-body) {
+  display: flex;
+}
+
+.dialog-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-inline: -0.5rem;
+  padding: 0.5rem 0.5rem 0.75rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(transparent, #000 0.75rem, #000 calc(100% - 0.75rem), transparent);
+  mask-image: linear-gradient(transparent, #000 0.75rem, #000 calc(100% - 0.75rem), transparent);
+}
+
+.dialog-body::-webkit-scrollbar { display: none; }
+
+/* --- SCANNER ON A PHONE ON ITS SIDE ---
+   Uses the wide (2×1) climbing card: camera on the left, heading and code
+   field on the right, so the whole window fits without scrolling. The card
+   keeps its 2:1 shape and fills about 92% of the screen height. */
+@media (orientation: landscape) and (max-height: 540px) {
+  .scan-dialog {
+    /* About as much of the screen as the upright card fills: 92% of the
+       height, or of the width for very wide-and-short screens. */
+    --h: min(440px, 92dvh, calc(92vw / 2));
+    width: calc(var(--h) * 2);
+    height: var(--h);
+    max-width: none;
+    /* The flat part of the paper starts 19.7% / 15.2% / 21.9% / 14.7% into the
+       artwork (top, right, bottom, left); the extra clears its rounded corners. */
+    padding:
+      calc(var(--h) * 0.197 + 8px)
+      calc(var(--h) * 2 * 0.152 + 8px)
+      calc(var(--h) * 0.219 + 8px)
+      calc(var(--h) * 2 * 0.147 + 8px);
+    background-image: url('/src/assets/climbing_cards/2x1_climbing_card.png');
+  }
+
+  .scan-dialog[open] { display: grid; }
+
+  /* Kept outside [open] so the layout holds while the window animates closed. */
+  .scan-dialog {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "camera heading"
+      "camera status"
+      "camera form";
+    column-gap: 1.25rem;
+    overflow: hidden;
+  }
+
+  .scan-dialog .provider-dialog-heading { grid-area: heading; }
+  .scan-dialog .provider-dialog-heading h2 { margin: 0; }
+
+  .scan-dialog .scan-viewport {
+    grid-area: camera;
+    height: 100%;
+    aspect-ratio: 1;
+    margin: 0;
+  }
+
+  .scan-dialog .scan-status {
+    grid-area: status;
+    align-self: center;
+    margin: 0;
+    min-height: 0;
+    font-size: 0.85rem;
+  }
+
+  .scan-dialog .scan-code-form { grid-area: form; margin: 0; }
+}
+
+/* Music menu text in the same browns as the scanner and playlist windows. */
+.provider-dialog:not(.scan-dialog):not(.playlist-dialog) .provider-dialog-heading h2,
+.provider-option h3 {
+  color: var(--walnut-brown);
+}
+
+.provider-option p {
+  color: var(--text-muted);
 }

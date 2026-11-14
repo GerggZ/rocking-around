@@ -9,6 +9,7 @@ import { setPlayerIcon, setPlayerProgress } from './views/player-visual.js';
 import { renderScanButton } from './views/scanner.js';
 import { setupMediaSession, updateMediaSession } from './media-session.js';
 import { watchForUpdates } from './version.js';
+import './card-fit.js';
 
 const cardMount = document.getElementById('card-mount');
 const externalMount = document.getElementById('external-content');
